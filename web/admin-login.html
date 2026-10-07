@@ -48,13 +48,17 @@
       </p>
 
       <!--
-        Minggu 13 : form ini mengirim POST /api/auth/login, password diverifikasi
-        terhadap hash, lalu token diterbitkan.
-
-        Sampai saat itu, form belum melakukan apa pun.
+        Minggu 05: validasi form ditangani oleh JavaScript.
+        Minggu 13: form ini akan mengirim POST /api/auth/login,
+        password diverifikasi terhadap hash, lalu token diterbitkan.
       -->
 
-      <form action="admin-dashboard.html" method="post">
+      <form
+        id="form-masuk"
+        action="admin-dashboard.html"
+        method="post"
+        novalidate
+      >
         <fieldset>
           <legend>Kredensial petugas</legend>
 
@@ -118,10 +122,12 @@
       </p>
 
       <p>
-        Minggu 03: form ini belum memeriksa apa pun dan langsung menuju halaman
-        dashboard. Autentikasi sungguhan ditambahkan pada Minggu 13.
+        Minggu 05: validasi form ditangani oleh JavaScript. Autentikasi
+        sungguhan ditambahkan pada Minggu 13.
       </p>
     </footer>
+
+    <script type="module" src="js/admin-login.js"></script>
   </body>
 </html>
 ```
