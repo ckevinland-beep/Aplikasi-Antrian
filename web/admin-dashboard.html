@@ -1,220 +1,171 @@
 ```html
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Dashboard Petugas — QueueApp</title>
+  <title>Dashboard Admin — QueueApp</title>
 
-    <meta
-      name="description"
-      content="Dashboard petugas untuk memantau dan mengelola antrean QueueApp."
-    />
+  <meta
+    name="description"
+    content="Dashboard admin untuk mengelola antrean QueueApp."
+  >
 
-    <link rel="stylesheet" href="css/style.css" />
-  </head>
+  <link rel="stylesheet" href="css/style.css">
+</head>
 
-  <body>
-    <a href="#konten-utama">Lewati ke konten utama</a>
+<body>
+  <a href="#konten-utama" class="lewati-ke-konten">
+    Lewati ke konten utama
+  </a>
 
-    <header>
-      <p><strong>QueueApp</strong></p>
+  <header class="site-header">
+    <div class="wadah">
+      <p class="nama-aplikasi">QueueApp</p>
 
       <nav aria-label="Navigasi utama">
         <ul>
           <li>
             <a href="index.html">Antrean Saat Ini</a>
           </li>
-
           <li>
             <a href="take-queue.html">Ambil Nomor</a>
           </li>
-
           <li>
             <a href="admin-dashboard.html" aria-current="page">
-              Dashboard Petugas
+              Dashboard Admin
             </a>
-          </li>
-
-          <li>
-            <a href="admin-login.html">Keluar</a>
           </li>
         </ul>
       </nav>
+    </div>
+  </header>
+
+  <main id="konten-utama" class="wadah">
+    <header class="halaman-header">
+      <p class="eyebrow">Area Petugas</p>
+      <h1>Dashboard Admin</h1>
+      <p>
+        Kelola antrean yang sedang menunggu, dipanggil, dan sudah selesai.
+      </p>
     </header>
 
-    <main id="konten-utama">
-      <h1>Dashboard Petugas</h1>
+    <section
+      class="ringkasan"
+      aria-labelledby="judul-ringkasan"
+    >
+      <h2 id="judul-ringkasan">Ringkasan Hari Ini</h2>
 
-      <section aria-labelledby="judul-ringkasan">
-        <h2 id="judul-ringkasan">Ringkasan Hari Ini</h2>
+      <dl>
+        <dt>Sedang dipanggil</dt>
+        <dd id="ringkas-dipanggil">—</dd>
 
-        <dl>
-          <dt>Sedang dipanggil</dt>
-          <dd>A003</dd>
+        <dt>Menunggu</dt>
+        <dd id="ringkas-menunggu">0</dd>
 
-          <dt>Menunggu</dt>
-          <dd>2</dd>
+        <dt>Selesai</dt>
+        <dd id="ringkas-selesai">0</dd>
+      </dl>
+    </section>
 
-          <dt>Selesai</dt>
-          <dd>2</dd>
-        </dl>
-      </section>
+    <section
+      class="aksi-antrean"
+      aria-labelledby="judul-aksi"
+    >
+      <h2 id="judul-aksi">Panggil Antrean</h2>
 
-      <section aria-labelledby="judul-aksi">
-        <h2 id="judul-aksi">Aksi</h2>
-
-        <!--
-          Aturannya tetap: yang dipanggil selalu antrean WAITING tertua.
-          Petugas tidak memilih sendiri. Lihat FR-06 dan
-          docs/architecture.md 6.2.
-
-          Minggu 11 : tombol ini mengirim POST /api/queues/next
-        -->
-
-        <form action="#daftar-antrean" method="post">
-          <button type="submit">Panggil Antrean Berikutnya</button>
-        </form>
-
-        <p>
-          Antrean berikutnya yang akan dipanggil:
-          <strong>A004</strong>.
-        </p>
-      </section>
-
-      <section id="daftar-antrean" aria-labelledby="judul-daftar">
-        <h2 id="judul-daftar">Daftar Antrean</h2>
-
-        <div class="tabel-gulir">
-          <table>
-            <caption>
-              Antrean hari ini, diurutkan dari yang paling awal dibuat.
-            </caption>
-
-            <thead>
-              <tr>
-                <th scope="col">Nomor</th>
-                <th scope="col">Status</th>
-                <th scope="col">Dibuat</th>
-                <th scope="col">Dipanggil</th>
-                <th scope="col">Selesai</th>
-                <th scope="col">Aksi</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <th scope="row">A001</th>
-
-                <td data-status="COMPLETED">COMPLETED</td>
-
-                <td>
-                  <time datetime="2026-09-03T08:30">08.30</time>
-                </td>
-
-                <td>
-                  <time datetime="2026-09-03T08:32">08.32</time>
-                </td>
-
-                <td>
-                  <time datetime="2026-09-03T08:41">08.41</time>
-                </td>
-
-                <td>—</td>
-              </tr>
-
-              <tr>
-                <th scope="row">A002</th>
-
-                <td data-status="COMPLETED">COMPLETED</td>
-
-                <td>
-                  <time datetime="2026-09-03T08:47">08.47</time>
-                </td>
-
-                <td>
-                  <time datetime="2026-09-03T08:55">08.55</time>
-                </td>
-
-                <td>
-                  <time datetime="2026-09-03T09:06">09.06</time>
-                </td>
-
-                <td>—</td>
-              </tr>
-
-              <tr>
-                <th scope="row">A003</th>
-
-                <td data-status="CALLED">CALLED</td>
-
-                <td>
-                  <time datetime="2026-09-03T09:02">09.02</time>
-                </td>
-
-                <td>
-                  <time datetime="2026-09-03T09:15">09.15</time>
-                </td>
-
-                <td>—</td>
-
-                <td>
-                  <!-- Minggu 11: POST /api/queues/3/complete -->
-                  <form action="#daftar-antrean" method="post">
-                    <button type="submit">Selesaikan A003</button>
-                  </form>
-                </td>
-              </tr>
-
-              <tr>
-                <th scope="row">A004</th>
-
-                <td data-status="WAITING">WAITING</td>
-
-                <td>
-                  <time datetime="2026-09-03T09:10">09.10</time>
-                </td>
-
-                <td>—</td>
-
-                <td>—</td>
-
-                <td>—</td>
-              </tr>
-
-              <tr>
-                <th scope="row">A005</th>
-
-                <td data-status="WAITING">WAITING</td>
-
-                <td>
-                  <time datetime="2026-09-03T09:18">09.18</time>
-                </td>
-
-                <td>—</td>
-
-                <td>—</td>
-
-                <td>—</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </main>
-
-    <footer>
       <p>
-        QueueApp — reference implementation mata kuliah Web and Mobile
-        Technology (BD323).
+        Panggil antrean WAITING tertua untuk dilayani berikutnya.
+      </p>
+
+      <form
+        id="form-panggil"
+        action="#daftar-antrean"
+        method="post"
+      >
+        <button
+          type="submit"
+          id="tombol-panggil"
+        >
+          Panggil Antrean Berikutnya
+        </button>
+      </form>
+
+      <p id="berikutnya">
+        Belum ada antrean yang menunggu.
+      </p>
+
+      <p
+        class="pesan-galat"
+        role="alert"
+        id="pesan-aksi"
+      ></p>
+    </section>
+
+    <section
+      id="daftar-antrean"
+      aria-labelledby="judul-daftar"
+    >
+      <h2 id="judul-daftar">Daftar Antrean</h2>
+
+      <!--
+        Pembungkus tabel dapat digulir menyamping pada layar sempit.
+        role="region" dan tabindex="0" membuat area tabel
+        dapat dicapai dan digulir menggunakan keyboard.
+      -->
+      <div
+        class="tabel-gulir"
+        role="region"
+        aria-label="Tabel daftar antrean"
+        tabindex="0"
+      >
+        <table>
+          <caption>
+            Antrean hari ini, urut dari yang terawal.
+          </caption>
+
+          <thead>
+            <tr>
+              <th scope="col">Nomor</th>
+              <th scope="col">Status</th>
+              <th scope="col">Dibuat</th>
+              <th scope="col">Dipanggil</th>
+              <th scope="col">Selesai</th>
+              <th scope="col">Aksi</th>
+            </tr>
+          </thead>
+
+          <tbody id="isi-antrean">
+            <tr>
+              <td colspan="6">
+                Belum ada antrean.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wadah">
+      <p>
+        QueueApp — reference implementation mata kuliah
+        Web and Mobile Technology (BD323).
       </p>
 
       <p>
-        Minggu 03: isi tabel masih tetap dan tombolnya belum melakukan apa pun.
-        Data sungguhan masuk pada Minggu 10 dan Minggu 11.
+        Minggu 05: prototype. Data antrean disimpan sementara
+        pada browser menggunakan JavaScript dan localStorage.
       </p>
-    </footer>
-  </body>
+    </div>
+  </footer>
+
+  <script
+    type="module"
+    src="js/admin-dashboard.js"
+  ></script>
+</body>
 </html>
 ```
