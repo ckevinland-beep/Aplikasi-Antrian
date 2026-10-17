@@ -1,128 +1,16 @@
-```html
 <!doctype html>
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Ambil Nomor Antrean — QueueApp</title>
-
     <meta
       name="description"
-      content="Mengambil nomor antrean dan melihat langkah selanjutnya."
+      content="Ambil nomor antrean melalui QueueApp."
     />
-
-    <link rel="stylesheet" href="css/style.css" />
+    <title>QueueApp — Ambil Nomor Antrean</title>
   </head>
-
   <body>
-    <a href="#konten-utama">Lewati ke konten utama</a>
-
-    <header>
-      <p><strong>QueueApp</strong></p>
-
-      <nav aria-label="Navigasi utama">
-        <ul>
-          <li>
-            <a href="index.html">Antrean Saat Ini</a>
-          </li>
-
-          <li>
-            <a href="take-queue.html" aria-current="page">
-              Ambil Nomor
-            </a>
-          </li>
-
-          <li>
-            <a href="admin-login.html">Masuk sebagai Petugas</a>
-          </li>
-        </ul>
-      </nav>
-    </header>
-
-    <main id="konten-utama">
-      <h1>Ambil Nomor Antrean</h1>
-
-      <p id="ringkas-antrean">
-        Belum ada antrean yang sedang dipanggil.
-      </p>
-
-      <section aria-labelledby="judul-form">
-        <h2 id="judul-form">Ambil Nomor</h2>
-
-        <!--
-          Nomor antrean ditentukan oleh server, bukan oleh halaman ini.
-          Lihat docs/architecture.md 6.1 — bila client yang menentukan, dua
-          pengunjung yang menekan tombol bersamaan bisa mendapat nomor sama.
-
-          Minggu 05 : tombol ini ditangani JavaScript, nomor disimpan di localStorage
-          Minggu 11 : form ini mengirim POST /api/queues
-        -->
-
-        <form id="form-ambil" action="#konfirmasi" method="post">
-          <fieldset>
-            <legend>Konfirmasi pengambilan antrean</legend>
-
-            <p>
-              Nomor antrean akan dibuatkan untuk Anda. Anda tidak perlu mengisi
-              data apa pun.
-            </p>
-
-            <button type="submit">Ambil Nomor Antrean</button>
-          </fieldset>
-        </form>
-      </section>
-
-      <!--
-        aria-live="polite" membuat pembaca layar mengumumkan perubahan
-        nomor antrean tanpa memotong bacaan yang sedang berjalan.
-      -->
-      <section
-        id="konfirmasi"
-        aria-labelledby="judul-konfirmasi"
-        aria-live="polite"
-      >
-        <h2 id="judul-konfirmasi">Nomor Antrean Anda</h2>
-
-        <p
-          class="nomor-antrean nomor-antrean--kosong"
-          id="nomor-saya"
-        >
-          Belum ada nomor yang diambil dari perangkat ini.
-        </p>
-
-        <p id="status-saya"></p>
-      </section>
-
-      <section aria-labelledby="judul-langkah">
-        <h2 id="judul-langkah">Selanjutnya</h2>
-
-        <ol>
-          <li>Simpan atau catat nomor antrean Anda.</li>
-
-          <li>
-            Perhatikan halaman
-            <a href="index.html">Antrean Saat Ini</a>.
-          </li>
-
-          <li>Menuju loket ketika nomor Anda dipanggil.</li>
-        </ol>
-      </section>
-    </main>
-
-    <footer>
-      <p>
-        QueueApp — reference implementation mata kuliah Web and Mobile
-        Technology (BD323).
-      </p>
-
-      <p>
-        Minggu 05: prototype. Nomor dibuat di peramban ini dan belum dikirim
-        ke mana pun.
-      </p>
-    </footer>
-
-    <script type="module" src="js/take-queue.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/entries/take-queue.jsx"></script>
   </body>
 </html>
-```
