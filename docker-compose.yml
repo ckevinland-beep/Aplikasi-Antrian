@@ -38,18 +38,25 @@ services:
     networks:
       - queueapp
 
+  
   web:
-    image: nginx:alpine
+    image: node:20-bookworm-slim
     container_name: queueapp-web
     restart: unless-stopped
+    working_dir: /app
+    environment:
+      NODE_ENV: development
     ports:
-      - "${WEB_PORT}:80"
+      - "${WEB_PORT}:5173"
     volumes:
-      - ./web:/usr/share/nginx/html:ro
+      - ./web:/app
+      - /app/node_modules
+    command: sh -c "[ -d node_modules/vite ] || npm ci --no-audit --no-fund; npm run dev"
     depends_on:
       - server
     networks:
       - queueapp
+
 
 volumes:
   mysql_data:

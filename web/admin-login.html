@@ -1,133 +1,16 @@
-```html
 <!doctype html>
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Masuk sebagai Petugas — QueueApp</title>
-
     <meta
       name="description"
-      content="Halaman masuk untuk petugas QueueApp."
+      content="Halaman login petugas QueueApp."
     />
-
-    <link rel="stylesheet" href="css/style.css" />
+    <title>QueueApp — Login Petugas</title>
   </head>
-
   <body>
-    <a href="#konten-utama">Lewati ke konten utama</a>
-
-    <header>
-      <p><strong>QueueApp</strong></p>
-
-      <nav aria-label="Navigasi utama">
-        <ul>
-          <li>
-            <a href="index.html">Antrean Saat Ini</a>
-          </li>
-
-          <li>
-            <a href="take-queue.html">Ambil Nomor</a>
-          </li>
-
-          <li>
-            <a href="admin-login.html" aria-current="page">
-              Masuk sebagai Petugas
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </header>
-
-    <main id="konten-utama">
-      <h1>Masuk sebagai Petugas</h1>
-
-      <p>
-        Halaman ini hanya untuk petugas. Pengunjung tidak perlu masuk.
-      </p>
-
-      <!--
-        Minggu 05: validasi form ditangani oleh JavaScript.
-        Minggu 13: form ini akan mengirim POST /api/auth/login,
-        password diverifikasi terhadap hash, lalu token diterbitkan.
-      -->
-
-      <form
-        id="form-masuk"
-        action="admin-dashboard.html"
-        method="post"
-        novalidate
-      >
-        <fieldset>
-          <legend>Kredensial petugas</legend>
-
-          <!--
-            Wadah pesan kesalahan, kosong sampai ada kesalahan sungguhan.
-            role="alert" membuat isinya diumumkan pembaca layar begitu terisi,
-            tanpa memindahkan fokus pengguna.
-          -->
-          <p class="pesan-galat" role="alert"></p>
-
-          <p>
-            <label for="email">Email</label>
-
-            <input
-              type="email"
-              id="email"
-              name="email"
-              autocomplete="username"
-              required
-              aria-describedby="bantuan-email"
-            />
-
-            <span class="bantuan" id="bantuan-email">
-              Contoh: petugas@queueapp.test
-            </span>
-          </p>
-
-          <p>
-            <label for="password">Password</label>
-
-            <input
-              type="password"
-              id="password"
-              name="password"
-              autocomplete="current-password"
-              required
-            />
-          </p>
-
-          <p>
-            <button type="submit">Masuk</button>
-          </p>
-        </fieldset>
-      </form>
-
-      <section aria-labelledby="judul-kesalahan">
-        <h2 id="judul-kesalahan">Tentang Pesan Kesalahan</h2>
-
-        <p>
-          Bila kredensial salah, sistem tidak memberi tahu bagian mana yang
-          keliru. Menyebutkan "email tidak terdaftar" akan memberitahu penyerang
-          bahwa email lainnya terdaftar.
-        </p>
-      </section>
-    </main>
-
-    <footer>
-      <p>
-        QueueApp — reference implementation mata kuliah Web and Mobile
-        Technology (BD323).
-      </p>
-
-      <p>
-        Minggu 05: validasi form ditangani oleh JavaScript. Autentikasi
-        sungguhan ditambahkan pada Minggu 13.
-      </p>
-    </footer>
-
-    <script type="module" src="js/admin-login.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/entries/admin-login.jsx"></script>
   </body>
 </html>
-```
