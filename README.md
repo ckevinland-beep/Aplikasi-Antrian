@@ -180,3 +180,13 @@ Checkpoint `week-02` dicantumkan sesuai rencana modul dan perlu dipastikan sudah
 ## Status Pengembangan
 
 Sampai Week 06, QueueApp telah memiliki empat halaman frontend dan alur antrean dasar yang diuji melalui browser. Pengembangan berikutnya mengikuti modul praktikum, dengan tetap menjaga agar perubahan setiap minggu dapat ditelusuri melalui Git.
+
+### Week 07 — React Integration & Routing
+
+Mengintegrasikan React Router agar pengguna dapat berpindah halaman tanpa memuat ulang seluruh dokumen HTML. Aplikasi menggunakan satu `index.html` dengan empat path utama, yaitu `/`, `/queue`, `/admin/login`, dan `/admin/dashboard`.
+
+Pengelolaan state antrean dipusatkan melalui `App.jsx` dan `useQueue.js`. Lapisan `queueApi.js` menyediakan operasi data berbasis Promise, sedangkan komponen `DataState.jsx` menangani keadaan memuat dan galat.
+
+Pada tahap ini, data antrean masih dikelola secara lokal dan belum terhubung dengan API server sungguhan maupun database terpusat.
+
+Checkpoint: `week-07` — setelah perubahan selesai di-merge dan tag benar-benar dibuat.

@@ -1,3 +1,4 @@
+/* QueueApp — aturan antrean */
 
 export const STATUS = Object.freeze({
   WAITING: 'WAITING',
@@ -5,7 +6,6 @@ export const STATUS = Object.freeze({
   COMPLETED: 'COMPLETED',
 });
 
-/* Transisi status yang diperbolehkan. */
 const TRANSISI_SAH = Object.freeze({
   [STATUS.WAITING]: [STATUS.CALLED],
   [STATUS.CALLED]: [STATUS.COMPLETED],
@@ -15,16 +15,12 @@ const TRANSISI_SAH = Object.freeze({
 const boleh = (dari, ke) => TRANSISI_SAH[dari].includes(ke);
 const sekarang = () => new Date().toISOString();
 
-/* ---- Nomor antrean ---- */
-
 const AWALAN = 'A';
 const PANJANG_DIGIT = 3;
 
 export function formatQueueNumber(angka) {
   return AWALAN + String(angka).padStart(PANJANG_DIGIT, '0');
 }
-
-/* ---- State awal ---- */
 
 export function emptyState() {
   return {
@@ -34,48 +30,58 @@ export function emptyState() {
   };
 }
 
-/* ---- Membaca state ---- */
+/* Mendukung state object maupun array antrean */
+function daftarAntrean(data) {
+  return Array.isArray(data) ? data : data?.queues ?? [];
+}
 
-export function currentCalled(state) {
-  return state.queues.find(
-    (queue) => queue.status === STATUS.CALLED
+/* Membaca data antrean */
+export function currentCalled(data) {
+  return daftarAntrean(data).find(
+    (queue) => queue.status === STATUS.CALLED,
   ) ?? null;
 }
 
-export function nextInLine(state) {
-  return state.queues.find(
-    (queue) => queue.status === STATUS.WAITING
+export function nextInLine(data) {
+  return daftarAntrean(data).find(
+    (queue) => queue.status === STATUS.WAITING,
   ) ?? null;
 }
 
-export function waitingQueues(state) {
-  return state.queues.filter(
-    (queue) => queue.status === STATUS.WAITING
+export function waitingQueues(data) {
+  return daftarAntrean(data).filter(
+    (queue) => queue.status === STATUS.WAITING,
   );
 }
 
 export function myQueue(state) {
-  if (state.myQueueId === null) return null;
+  if (!state || state.myQueueId == null) return null;
 
-  return state.queues.find(
-    (queue) => queue.id === state.myQueueId
+  return daftarAntrean(state).find(
+    (queue) => queue.id === state.myQueueId,
   ) ?? null;
 }
 
-export function summary(state) {
+export function findQueue(data, id) {
+  return daftarAntrean(data).find(
+    (queue) => queue.id === id,
+  ) ?? null;
+}
+
+export function summary(data) {
+  const queues = daftarAntrean(data);
   const hitung = (status) =>
-    state.queues.filter((queue) => queue.status === status).length;
+    queues.filter((queue) => queue.status === status).length;
 
   return {
     waiting: hitung(STATUS.WAITING),
     called: hitung(STATUS.CALLED),
     completed: hitung(STATUS.COMPLETED),
-    total: state.queues.length,
+    total: queues.length,
   };
 }
 
-/* ---- Mengambil nomor antrean ---- */
-
+/* Membuat nomor antrean baru */
 export function takeQueue(state) {
   const angka = state.lastNumber + 1;
 
@@ -92,6 +98,7 @@ export function takeQueue(state) {
     ok: true,
     queue,
     state: {
+      ...state,
       lastNumber: angka,
       queues: [...state.queues, queue],
       myQueueId: queue.id,
@@ -99,8 +106,7 @@ export function takeQueue(state) {
   };
 }
 
-/* ---- Memanggil antrean berikutnya ---- */
-
+/* Memanggil antrean tertua yang masih menunggu */
 export function callNext(state) {
   const target = nextInLine(state);
 
@@ -136,16 +142,12 @@ export function callNext(state) {
 
   return {
     ok: true,
-    state: {
-      ...state,
-      queues,
-    },
+    state: { ...state, queues },
     queue: queues.find((queue) => queue.id === target.id),
   };
 }
 
-/* ---- Menyelesaikan antrean ---- */
-
+/* Menyelesaikan antrean tertentu */
 export function completeQueue(state, id) {
   const target = state.queues.find((queue) => queue.id === id);
 
@@ -174,15 +176,12 @@ export function completeQueue(state, id) {
           status: STATUS.COMPLETED,
           completedAt: waktu,
         }
-      : queue
+      : queue,
   );
 
   return {
     ok: true,
-    state: {
-      ...state,
-      queues,
-    },
+    state: { ...state, queues },
     queue: queues.find((queue) => queue.id === id),
   };
 }

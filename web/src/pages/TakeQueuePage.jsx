@@ -1,71 +1,47 @@
+import { currentCalled, waitingQueues } from '../queue.js';
 import Layout from '../components/Layout.jsx';
-import { myQueue } from '../queue.js';
+import DataState from '../components/DataState.jsx';
+import QueueDisplay from '../components/QueueDisplay.jsx';
+import QueueForm from '../components/QueueForm.jsx';
+import QueueStatus from '../components/QueueStatus.jsx';
 
-export default function TakeQueuePage({ state, ambilNomor, pesan }) {
-  const antreanSaya = myQueue(state);
-
+export default function TakeQueuePage({
+  status,
+  galat,
+  antrean,
+  nomorSaya,
+  pesan,
+  sibuk,
+  onAmbil,
+  onMuatUlang,
+}) {
   return (
     <Layout
       judul="Ambil Nomor Antrean"
-      aktif="take-queue.html"
-      catatan="Pastikan Anda menyimpan nomor antrean setelah mengambilnya."
+      catatan="Minggu 07: pengambilan nomor menggunakan lapisan data berbasis Promise."
     >
-      <section aria-labelledby="judul-ambil-antrean">
-        <h2 id="judul-ambil-antrean">Antrean Pelanggan</h2>
+      <DataState
+        status={status}
+        galat={galat}
+        onCobaLagi={onMuatUlang}
+      >
+        <QueueDisplay
+          dipanggil={currentCalled(antrean)}
+          menunggu={waitingQueues(antrean)}
+        />
 
-        <p>
-          Tekan tombol di bawah untuk mengambil nomor antrean baru.
-        </p>
+        <section aria-labelledby="judul-ambil-antrean">
+          <h2 id="judul-ambil-antrean">Ambil nomor antrean</h2>
 
-        <button type="button" onClick={ambilNomor}>
-          Ambil Nomor Antrean
-        </button>
-
-        {pesan && (
-          <p role="status" aria-live="polite">
-            {pesan}
-          </p>
-        )}
-      </section>
-
-      {antreanSaya && (
-        <section aria-labelledby="judul-nomor-saya">
-          <h2 id="judul-nomor-saya">Nomor Antrean Anda</h2>
-
-          <p>
-            Nomor antrean:{' '}
-            <strong>{antreanSaya.queueNumber}</strong>
-          </p>
-
-          <p>Status: {labelStatus(antreanSaya.status)}</p>
-
-          {antreanSaya.status === 'WAITING' && (
-            <p>Silakan menunggu sampai nomor Anda dipanggil.</p>
-          )}
-
-          {antreanSaya.status === 'CALLED' && (
-            <p>Nomor Anda sedang dipanggil. Silakan menuju petugas.</p>
-          )}
-
-          {antreanSaya.status === 'COMPLETED' && (
-            <p>Pelayanan untuk nomor Anda sudah selesai.</p>
-          )}
+          <QueueForm
+            onAmbil={onAmbil}
+            sibuk={sibuk}
+            pesan={pesan}
+          />
         </section>
-      )}
 
-      {!antreanSaya && (
-        <p>Anda belum mengambil nomor antrean pada sesi ini.</p>
-      )}
+        <QueueStatus antrean={nomorSaya} />
+      </DataState>
     </Layout>
   );
-}
-
-function labelStatus(status) {
-  const daftar = {
-    WAITING: 'Menunggu',
-    CALLED: 'Sedang Dipanggil',
-    COMPLETED: 'Selesai',
-  };
-
-  return daftar[status] ?? status;
 }

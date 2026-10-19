@@ -1,24 +1,30 @@
+import { useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
+
 const HALAMAN_PENGUNJUNG = [
-  { url: 'index.html', label: 'Antrean Saat Ini' },
-  { url: 'take-queue.html', label: 'Ambil Nomor' },
-  { url: 'admin-login.html', label: 'Masuk sebagai Petugas' },
+  { to: '/', label: 'Antrean Saat Ini' },
+  { to: '/queue', label: 'Ambil Nomor' },
+  { to: '/admin/login', label: 'Masuk sebagai Petugas' },
 ];
 
 const HALAMAN_PETUGAS = [
-  { url: 'index.html', label: 'Antrean Saat Ini' },
-  { url: 'take-queue.html', label: 'Ambil Nomor' },
-  { url: 'admin-dashboard.html', label: 'Dashboard Petugas' },
-  { url: 'admin-login.html', label: 'Keluar' },
+  { to: '/', label: 'Antrean Saat Ini' },
+  { to: '/queue', label: 'Ambil Nomor' },
+  { to: '/admin/dashboard', label: 'Dashboard Petugas' },
+  { to: '/admin/login', label: 'Keluar' },
 ];
 
 export default function Layout({
   judul,
-  aktif,
   petugas = false,
   catatan,
   children,
 }) {
   const halaman = petugas ? HALAMAN_PETUGAS : HALAMAN_PENGUNJUNG;
+
+  useEffect(() => {
+    document.title = `${judul} — QueueApp`;
+  }, [judul]);
 
   return (
     <>
@@ -27,35 +33,30 @@ export default function Layout({
       </a>
 
       <header>
-        <p>
-          <strong>QueueApp</strong>
-        </p>
+        <p><strong>QueueApp</strong></p>
 
         <nav aria-label="Navigasi utama">
           <ul>
             {halaman.map((item) => (
-              <li key={item.url}>
-                <a
-                  href={item.url}
-                  aria-current={item.url === aktif ? 'page' : undefined}
-                >
+              <li key={item.to}>
+                <NavLink to={item.to} end>
                   {item.label}
-                </a>
+                </NavLink>
               </li>
             ))}
           </ul>
         </nav>
       </header>
 
-      <main id="konten-utama">
+      <main id="konten-utama" tabIndex={-1}>
         <h1>{judul}</h1>
         {children}
       </main>
 
       <footer>
         <p>
-          QueueApp — reference implementation mata kuliah Web and Mobile
-          Technology (BD323).
+          QueueApp — reference implementation mata kuliah
+          Web and Mobile Technology (BD323).
         </p>
         <p>{catatan}</p>
       </footer>

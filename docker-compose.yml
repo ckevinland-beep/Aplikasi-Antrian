@@ -38,7 +38,6 @@ services:
     networks:
       - queueapp
 
-  
   web:
     image: node:20-bookworm-slim
     container_name: queueapp-web
@@ -51,12 +50,11 @@ services:
     volumes:
       - ./web:/app
       - /app/node_modules
-    command: sh -c "[ -d node_modules/vite ] || npm ci --no-audit --no-fund; npm run dev"
+    command: sh -c "npm install --no-audit --no-fund && npm run dev -- --host 0.0.0.0"
     depends_on:
       - server
     networks:
       - queueapp
-
 
 volumes:
   mysql_data:

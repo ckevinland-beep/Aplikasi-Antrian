@@ -1,48 +1,45 @@
-export default function AdminPreview({ dipanggil, berikutnya, ringkasan }) {
+export default function AdminPreview({
+  ringkasan,
+  dipanggil,
+  berikutnya,
+  pesan = '',
+  sibuk = false,
+  onPanggil,
+}) {
   return (
     <section aria-labelledby="judul-ringkasan">
       <h2 id="judul-ringkasan">Ringkasan Antrean</h2>
 
-      <div className="ringkasan-antrean">
-        <article>
-          <h3>Sedang Dipanggil</h3>
-          <p>
-            <strong>
-              {dipanggil ? dipanggil.queueNumber : 'Belum ada'}
-            </strong>
-          </p>
-        </article>
+      <ul>
+        <li>Menunggu: {ringkasan.waiting}</li>
+        <li>Sedang dipanggil: {ringkasan.called}</li>
+        <li>Selesai: {ringkasan.completed}</li>
+        <li>Total antrean: {ringkasan.total}</li>
+      </ul>
 
-        <article>
-          <h3>Antrean Berikutnya</h3>
-          <p>
-            <strong>
-              {berikutnya ? berikutnya.queueNumber : 'Belum ada'}
-            </strong>
-          </p>
-        </article>
+      <p>
+        Antrean yang sedang dipanggil:{' '}
+        <strong>{dipanggil?.queueNumber ?? 'Belum ada'}</strong>
+      </p>
 
-        <article>
-          <h3>Menunggu</h3>
-          <p>
-            <strong>{ringkasan.waiting}</strong>
-          </p>
-        </article>
+      <p>
+        Antrean berikutnya:{' '}
+        <strong>{berikutnya?.queueNumber ?? 'Tidak ada'}</strong>
+      </p>
 
-        <article>
-          <h3>Selesai</h3>
-          <p>
-            <strong>{ringkasan.completed}</strong>
-          </p>
-        </article>
+      {pesan && (
+        <p className="pesan-galat" role="alert">
+          {pesan}
+        </p>
+      )}
 
-        <article>
-          <h3>Total Antrean</h3>
-          <p>
-            <strong>{ringkasan.total}</strong>
-          </p>
-        </article>
-      </div>
+      <button
+        type="button"
+        disabled={sibuk || !berikutnya}
+        onClick={onPanggil}
+      >
+        {sibuk ? 'Memproses...' : 'Panggil Antrean Berikutnya'}
+      </button>
     </section>
   );
 }
