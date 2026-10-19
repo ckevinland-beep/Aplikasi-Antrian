@@ -1,7 +1,6 @@
-
 # QueueApp Milestone Tracker
 
-Dokumen ini mencatat perkembangan QueueApp berdasarkan modul praktikum Minggu 01 sampai Minggu 06.
+Dokumen ini mencatat perkembangan QueueApp berdasarkan modul praktikum Minggu 01 sampai Minggu 07.
 
 ## Week 01 — Discovery & Environment
 
@@ -45,7 +44,7 @@ Periksa `docs/requirements.md`, `PRD.md`, dan berkas perancangan yang diwajibkan
 
 ### Hasil
 
-Bagian ini harus diperbarui berdasarkan berkas dan checkpoint Week 02 yang benar-benar tersedia di repository.
+Bagian ini perlu diperbarui berdasarkan berkas dan checkpoint Week 02 yang benar-benar tersedia di repository.
 
 ## Week 03 — UI/UX + HTML
 
@@ -125,17 +124,16 @@ Prototipe antrean interaktif dapat digunakan dan data antrean dapat bertahan set
 
 - [x] React dan Vite dikonfigurasi.
 - [x] Dependency dan `package-lock.json` dibuat.
-- [x] Empat halaman HTML menggunakan entry React.
 - [x] Logika antrean dipisahkan ke `src/queue.js`.
 - [x] Penyimpanan data dipisahkan ke `src/storage.js`.
 - [x] Hook antrean disiapkan di `src/useQueue.js`.
 - [x] Komponen dan halaman React dibuat.
 - [x] Stylesheet dipindahkan ke `src/styles/style.css`.
-- [x] Entry point React dibuat untuk empat halaman.
+- [x] Entry point React disiapkan untuk halaman aplikasi.
 - [x] Konfigurasi Docker Compose diperbarui untuk Vite.
-- [x] Build produksi berhasil.
-- [x] Empat halaman diuji melalui browser.
-- [x] Alur antrean dasar diuji melalui Docker.
+- [x] Build produksi berhasil pada tahap Week 06.
+- [x] Halaman dan alur antrean dasar diuji melalui Docker.
+- [ ] Dokumentasi Week 06 diselaraskan dengan perubahan routing pada Week 07.
 
 ### Berkas Utama
 
@@ -151,18 +149,66 @@ Prototipe antrean interaktif dapat digunakan dan data antrean dapat bertahan set
 
 ### Verifikasi
 
-- [x] `npm.cmd run build` berhasil.
-- [x] Halaman antrean dapat dibuka.
-- [x] Halaman pengambilan nomor dapat dibuka.
-- [x] Halaman login petugas dapat dibuka.
-- [x] Dashboard petugas dapat dibuka.
+- [x] `npm.cmd run build` berhasil pada tahap Week 06.
+- [x] Halaman antrean dapat dibuka pada tahap Week 06.
+- [x] Halaman pengambilan nomor dapat dibuka pada tahap Week 06.
+- [x] Halaman login petugas dapat dibuka pada tahap Week 06.
+- [x] Dashboard petugas dapat dibuka pada tahap Week 06.
 - [x] Alur antrean dasar diuji melalui Docker.
 
 ### Hasil
 
-Frontend QueueApp telah dimigrasikan ke React dan Vite. Empat halaman tetap tersedia, sementara data antrean masih menggunakan LocalStorage dan belum terhubung ke API atau database.
+Frontend QueueApp telah dimigrasikan ke React dan Vite. Pada tahap Week 06, aplikasi menggunakan beberapa entry HTML. Struktur tersebut kemudian disederhanakan pada Week 07 menjadi satu `index.html` dengan React Router.
 
-## Ringkasan Week 01–06
+## Week 07 — React Integration & Routing
+
+### Status
+
+- [x] React Router ditambahkan sebagai dependency.
+- [x] Aplikasi menggunakan satu dokumen HTML sebagai entry point.
+- [x] Routing sisi klien disiapkan untuk halaman utama.
+- [x] Routing halaman pengambilan nomor antrean disiapkan.
+- [x] Routing halaman login petugas disiapkan.
+- [x] Routing dashboard petugas disiapkan.
+- [x] Halaman Not Found disiapkan untuk alamat yang tidak terdaftar.
+- [x] Pengelolaan state antrean dipusatkan melalui `App.jsx` dan `useQueue.js`.
+- [x] Lapisan data berbasis Promise disiapkan melalui `queueApi.js`.
+- [x] Komponen loading dan error disiapkan melalui `DataState.jsx`.
+- [ ] Seluruh routing dan alur antrean diuji kembali melalui browser.
+- [ ] Build produksi diperiksa kembali setelah integrasi routing.
+- [ ] Dokumentasi arsitektur dan alur pengguna diperbarui sesuai implementasi akhir.
+
+### Berkas Utama
+
+- `web/index.html`
+- `web/vite.config.js`
+- `web/src/main.jsx`
+- `web/src/App.jsx`
+- `web/src/useQueue.js`
+- `web/src/api/queueApi.js`
+- `web/src/components/Layout.jsx`
+- `web/src/components/DataState.jsx`
+- `web/src/pages/NotFoundPage.jsx`
+- `web/src/styles/style.css`
+- `docker-compose.yml`
+
+### Verifikasi
+
+- [ ] Halaman utama dapat dibuka melalui `/`.
+- [ ] Halaman pengambilan nomor dapat dibuka melalui `/queue`.
+- [ ] Halaman login petugas dapat dibuka melalui `/admin/login`.
+- [ ] Dashboard petugas dapat dibuka melalui `/admin/dashboard`.
+- [ ] Alamat yang tidak terdaftar menampilkan halaman Not Found.
+- [ ] Navigasi ant halaman berjalan tanpa memuat ulang seluruh dokumen.
+- [ ] Loading dan error ditampilkan sesuai kondisi.
+- [ ] Pengambilan, pemanggilan, dan penyelesaian antrean diuji kembali.
+- [ ] `npm.cmd run build` berhasil setelah integrasi routing.
+
+### Hasil
+
+QueueApp mulai menggunakan React Router untuk mengelola perpindahan halaman melalui satu dokumen HTML. Pengelolaan state antrean dipusatkan di React, sedangkan lapisan data menggunakan Promise untuk menyimulasikan proses permintaan data. Pada tahap ini, data masih dikelola secara lokal dan belum menggunakan API server sungguhan maupun database terpusat.
+
+## Ringkasan Week 01–07
 
 | Minggu | Materi | Status |
 |---|---|---|
@@ -171,8 +217,13 @@ Frontend QueueApp telah dimigrasikan ke React dan Vite. Empat halaman tetap ters
 | Week 03 | UI/UX + HTML | Selesai |
 | Week 04 | CSS & Responsive Design | Selesai |
 | Week 05 | JavaScript Foundation | Selesai |
-| Week 06 | React + Vite | Selesai |
+| Week 06 | React + Vite | Perlu penyesuaian dokumentasi |
+| Week 07 | React Integration & Routing | Dalam proses verifikasi |
 
 ## Catatan
 
-Status di atas mencerminkan pekerjaan yang diketahui telah dilakukan. Bagian Week 02 dan keberadaan tag `week-02` perlu diperiksa sebelum tracker dianggap final. Jangan menandai checkpoint atau pengujian yang belum benar-benar dilakukan.
+Status milestone mencerminkan pekerjaan yang telah dilakukan berdasarkan perkembangan proyek. Checklist yang belum diverifikasi perlu diperiksa kembali melalui kode, browser, Docker, dan repository.
+
+Bagian Week 02 dan keberadaan tag `week-02` masih perlu diverifikasi. Dokumentasi Week 06 juga perlu diselaraskan dengan perubahan routing pada Week 07, terutama terkait penggunaan satu `index.html` dan pengelolaan halaman melalui React Router.
+
+Checkpoint Git, hasil build, dan pengujian hanya boleh dinyatakan selesai setelah benar-benar diverifikasi. Pada Week 07, data antrean masih dikelola secara lokal dan belum terhubung dengan API server sungguhan maupun database terpusat.

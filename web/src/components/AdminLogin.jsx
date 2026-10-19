@@ -1,55 +1,69 @@
 import { useState } from 'react';
 
-export default function AdminLogin({ onLogin, pesan = '' }) {
-  const [username, setUsername] = useState('');
+export default function AdminLogin({ onLogin }) {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [pesan, setPesan] = useState('');
 
   function handleSubmit(event) {
     event.preventDefault();
-    onLogin({ username, password });
+
+    if (!email.trim() || !password) {
+      setPesan('Email dan kata sandi wajib diisi.');
+      return;
+    }
+
+    setPesan('');
+    onLogin();
   }
 
   return (
     <section aria-labelledby="judul-login">
       <h2 id="judul-login">Login Petugas</h2>
 
-      <p>Masuk menggunakan akun petugas untuk mengelola antrean.</p>
-
-      {pesan && (
-        <p role="alert" aria-live="polite">
-          {pesan}
-        </p>
-      )}
+      <p>
+        Masukkan email dan kata sandi untuk membuka dashboard
+        petugas.
+      </p>
 
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="username">Username atau Email</label>
+          <label htmlFor="email-petugas">Email</label>
           <input
-            id="username"
-            name="username"
-            type="text"
+            id="email-petugas"
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
             autoComplete="username"
-            value={username}
-            onChange={(event) => setUsername(event.target.value)}
             required
           />
         </div>
 
         <div>
-          <label htmlFor="password">Password</label>
+          <label htmlFor="password-petugas">Kata sandi</label>
           <input
-            id="password"
-            name="password"
+            id="password-petugas"
             type="password"
-            autoComplete="current-password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
+            autoComplete="current-password"
             required
           />
         </div>
 
+        {pesan && (
+          <p className="pesan-galat" role="alert">
+            {pesan}
+          </p>
+        )}
+
         <button type="submit">Masuk</button>
       </form>
+
+      <p>
+        Catatan: login ini hanya simulasi untuk praktikum,
+        belum menggunakan autentikasi sungguhan.
+      </p>
     </section>
   );
 }

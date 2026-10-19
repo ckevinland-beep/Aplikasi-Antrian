@@ -1,28 +1,21 @@
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 import Layout from '../components/Layout.jsx';
 import AdminLogin from '../components/AdminLogin.jsx';
 
 export default function AdminLoginPage() {
-  const [pesan, setPesan] = useState('');
+  const navigasi = useNavigate();
 
-  function handleLogin({ username, password }) {
-    if (!username.trim() || !password) {
-      setPesan('Username dan password wajib diisi.');
-      return;
-    }
-
-    setPesan(
-      'Login belum terhubung ke sistem autentikasi.'
-    );
+  function handleLogin() {
+    navigasi('/admin/dashboard');
   }
 
   return (
     <Layout
-      judul="Login Petugas"
-      aktif="admin-login.html"
-      catatan="Halaman akses petugas QueueApp."
+      judul="Masuk sebagai Petugas"
+      catatan="Minggu 07: perpindahan halaman menggunakan React Router tanpa memuat ulang dokumen."
     >
-      <AdminLogin onLogin={handleLogin} pesan={pesan} />
+      <AdminLogin onLogin={handleLogin} />
     </Layout>
   );
 }
