@@ -32,20 +32,30 @@ export default function Layout({
         Lewati ke konten utama
       </a>
 
-      <header>
-        <p><strong>QueueApp</strong></p>
+      <header className="site-header">
+        <div className="header-dalam">
+          <NavLink to="/" className="logo">
+            QueueApp
+          </NavLink>
 
-        <nav aria-label="Navigasi utama">
-          <ul>
-            {halaman.map((item) => (
-              <li key={item.to}>
-                <NavLink to={item.to} end>
-                  {item.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
+          <nav aria-label="Navigasi utama">
+            <ul>
+              {halaman.map((item) => (
+                <li key={item.to}>
+                  <NavLink
+                    to={item.to}
+                    end
+                    className={({ isActive }) =>
+                      isActive ? 'active' : undefined
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
       </header>
 
       <main id="konten-utama" tabIndex={-1}>
@@ -54,11 +64,13 @@ export default function Layout({
       </main>
 
       <footer>
-        <p>
-          QueueApp — reference implementation mata kuliah
-          Web and Mobile Technology (BD323).
-        </p>
-        <p>{catatan}</p>
+        <div className="footer-dalam">
+          <p>
+            QueueApp — reference implementation mata kuliah
+            Web and Mobile Technology (BD323).
+          </p>
+          {catatan && <p>{catatan}</p>}
+        </div>
       </footer>
     </>
   );
