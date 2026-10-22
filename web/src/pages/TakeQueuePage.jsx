@@ -1,7 +1,6 @@
-import { currentCalled, waitingQueues } from '../queue.js';
+import { currentCalled } from '../queue.js';
 import Layout from '../components/Layout.jsx';
 import DataState from '../components/DataState.jsx';
-import QueueDisplay from '../components/QueueDisplay.jsx';
 import QueueForm from '../components/QueueForm.jsx';
 import QueueStatus from '../components/QueueStatus.jsx';
 
@@ -15,32 +14,57 @@ export default function TakeQueuePage({
   onAmbil,
   onMuatUlang,
 }) {
+  const dipanggil = currentCalled(antrean);
+
   return (
-    <Layout
-      judul="Ambil Nomor Antrean"
-      catatan="Minggu 07: pengambilan nomor menggunakan lapisan data berbasis Promise."
-    >
+    <Layout judul="Ambil Nomor Antrean">
       <DataState
         status={status}
         galat={galat}
         onCobaLagi={onMuatUlang}
       >
-        <QueueDisplay
-          dipanggil={currentCalled(antrean)}
-          menunggu={waitingQueues(antrean)}
-        />
+        <div className="halaman-ambil-nomor">
+          <p className="info-panggilan">
+            {dipanggil
+              ? `Nomor ${dipanggil.queueNumber} sedang dipanggil.`
+              : 'Belum ada antrean yang sedang dipanggil.'}
+          </p>
 
-        <section aria-labelledby="judul-ambil-antrean">
-          <h2 id="judul-ambil-antrean">Ambil nomor antrean</h2>
+          <div className="kartu-ambil-grid">
+            <section
+              className="kartu-ambil"
+              aria-labelledby="judul-ambil-nomor"
+            >
+              <h2 id="judul-ambil-nomor">Ambil Nomor</h2>
 
-          <QueueForm
-            onAmbil={onAmbil}
-            sibuk={sibuk}
-            pesan={pesan}
-          />
-        </section>
+              <QueueForm
+                onAmbil={onAmbil}
+                sibuk={sibuk}
+                pesan={pesan}
+              />
+            </section>
 
-        <QueueStatus antrean={nomorSaya} />
+            <QueueStatus antrean={nomorSaya} />
+
+            <section
+              className="kartu-ambil kartu-petunjuk"
+              aria-labelledby="judul-petunjuk"
+            >
+              <h2 id="judul-petunjuk">Selanjutnya</h2>
+
+              <ol>
+                <li>Simpan atau catat nomor antrean Anda.</li>
+                <li>
+                  Perhatikan halaman{' '}
+                  <a href="/">Antrean Saat Ini</a>.
+                </li>
+                <li>
+                  Menuju loket ketika nomor Anda dipanggil.
+                </li>
+              </ol>
+            </section>
+          </div>
+        </div>
       </DataState>
     </Layout>
   );

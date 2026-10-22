@@ -7,39 +7,52 @@ export default function AdminPreview({
   onPanggil,
 }) {
   return (
-    <section aria-labelledby="judul-ringkasan">
-      <h2 id="judul-ringkasan">Ringkasan Antrean</h2>
-
-      <ul>
-        <li>Menunggu: {ringkasan.waiting}</li>
-        <li>Sedang dipanggil: {ringkasan.called}</li>
-        <li>Selesai: {ringkasan.completed}</li>
-        <li>Total antrean: {ringkasan.total}</li>
-      </ul>
-
-      <p>
-        Antrean yang sedang dipanggil:{' '}
-        <strong>{dipanggil?.queueNumber ?? 'Belum ada'}</strong>
-      </p>
-
-      <p>
-        Antrean berikutnya:{' '}
-        <strong>{berikutnya?.queueNumber ?? 'Tidak ada'}</strong>
-      </p>
-
-      {pesan && (
-        <p className="pesan-galat" role="alert">
-          {pesan}
-        </p>
-      )}
-
-      <button
-        type="button"
-        disabled={sibuk || !berikutnya}
-        onClick={onPanggil}
+    <div className="dashboard-ringkasan-grid">
+      <section
+        className="dashboard-kartu"
+        aria-labelledby="judul-ringkasan"
       >
-        {sibuk ? 'Memproses...' : 'Panggil Antrean Berikutnya'}
-      </button>
-    </section>
+        <h2 id="judul-ringkasan">Ringkasan Hari Ini</h2>
+
+        <dl className="dashboard-statistik">
+          <dt>Sedang dipanggil</dt>
+          <dd>{dipanggil?.queueNumber ?? '—'}</dd>
+
+          <dt>Menunggu</dt>
+          <dd>{ringkasan.waiting}</dd>
+
+          <dt>Selesai</dt>
+          <dd>{ringkasan.completed}</dd>
+        </dl>
+      </section>
+
+      <section
+        className="dashboard-kartu"
+        aria-labelledby="judul-aksi"
+      >
+        <h2 id="judul-aksi">Aksi</h2>
+
+        <button
+          type="button"
+          className="dashboard-tombol"
+          disabled={sibuk || !berikutnya}
+          onClick={onPanggil}
+        >
+          {sibuk ? 'Memproses...' : 'Panggil Antrean Berikutnya'}
+        </button>
+
+        <p className="dashboard-keterangan">
+          {berikutnya
+            ? `Antrean berikutnya yang akan dipanggil: ${berikutnya.queueNumber}.`
+            : 'Tidak ada antrean yang menunggu.'}
+        </p>
+
+        {pesan && (
+          <p className="pesan-galat" role="alert">
+            {pesan}
+          </p>
+        )}
+      </section>
+    </div>
   );
 }

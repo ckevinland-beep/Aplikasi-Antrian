@@ -9,10 +9,12 @@ export default function QueueForm({
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="form-ambil-nomor" onSubmit={handleSubmit}>
+      <h3>Konfirmasi pengambilan antrean</h3>
+
       <p>
-        Tekan tombol di bawah untuk mendapatkan nomor antrean
-        baru.
+        Nomor antrean akan dibuatkan untuk Anda.
+        Anda tidak perlu mengisi data apa pun.
       </p>
 
       <button type="submit" disabled={sibuk}>

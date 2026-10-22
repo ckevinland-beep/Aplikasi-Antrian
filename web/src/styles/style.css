@@ -366,3 +366,528 @@ footer p {
     gap: 0.2rem;
   }
 }
+
+
+/* Halaman Ambil Nomor Antrean */
+.halaman-ambil-nomor {
+  width: 100%;
+}
+
+.info-panggilan {
+  margin: 1.5rem 0 1rem;
+  font-size: 0.9rem;
+}
+
+.kartu-ambil-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 1rem;
+}
+
+.kartu-ambil {
+  min-width: 0;
+  padding: 1.35rem;
+  background: #ffffff;
+  border: 1px solid #dce1e7;
+  border-radius: 0.4rem;
+}
+
+.kartu-ambil h2 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  line-height: 1.3;
+}
+
+.form-ambil-nomor h3 {
+  margin: 0 0 0.7rem;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.form-ambil-nomor p {
+  font-size: 0.9rem;
+}
+
+.form-ambil-nomor button {
+  width: 100%;
+  padding: 0.7rem 0.65rem;
+  background: #7189a7;
+  border: 1px solid #637d9d;
+  border-radius: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.form-ambil-nomor button:hover:not(:disabled) {
+  background: #526d8e;
+}
+
+.nomor-saya {
+  margin: 0.5rem 0;
+  color: #174a89;
+  font-size: clamp(2.2rem, 4vw, 3.2rem);
+  font-weight: 400;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.nomor-belum-ada {
+  margin: 0.5rem 0;
+  color: #174a89;
+  font-size: 2rem;
+}
+
+.status-nomor {
+  margin: 0.7rem 0 0;
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+.kartu-petunjuk ol {
+  margin: 0;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+}
+
+.kartu-petunjuk li {
+  padding-left: 0.1rem;
+  margin-bottom: 0.45rem;
+}
+
+.kartu-petunjuk li:last-child {
+  margin-bottom: 0;
+}
+
+.kartu-petunjuk a {
+  color: #174a89;
+}
+
+@media (max-width: 700px) {
+  .kartu-ambil-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .kartu-ambil {
+    padding: 1.15rem;
+  }
+
+  .nomor-saya {
+    font-size: 2.8rem;
+  }
+}
+
+
+/* Halaman Masuk sebagai Petugas */
+.login-halaman {
+  width: 100%;
+}
+
+.login-pengantar {
+  margin: 1.5rem 0 1rem;
+  font-size: 0.9rem;
+}
+
+.login-kartu {
+  margin: 0 0 1rem;
+  padding: 1.35rem;
+  background: #ffffff;
+  border: 1px solid #dce1e7;
+  border-radius: 0.4rem;
+}
+
+.login-kartu h2 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.login-field {
+  margin-bottom: 0.65rem;
+}
+
+.login-field label {
+  display: block;
+  margin-bottom: 0.2rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.login-field input {
+  width: 100%;
+  max-width: 420px;
+  margin: 0;
+  padding: 0.55rem 0.65rem;
+  border: 1px solid #9ca3af;
+  border-radius: 0.3rem;
+  font: inherit;
+}
+
+.login-field input.login-input-salah {
+  border: 1px solid #dc2626;
+  background: #fff5f5;
+}
+
+.login-field input:focus-visible {
+  outline: 2px solid #dc2626;
+  outline-offset: 2px;
+}
+
+.login-field small {
+  display: block;
+  margin-top: 0.2rem;
+  color: #555555;
+  font-size: 0.75rem;
+}
+
+.login-pesan {
+  margin: 0 0 0.8rem;
+  padding: 0.65rem;
+  color: #b91c1c;
+  background: #fff5f5;
+  border-left: 3px solid #dc2626;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.login-tombol {
+  padding: 0.55rem 1rem;
+  background: #174a89;
+  border-radius: 0.3rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.login-tombol:hover:not(:disabled) {
+  background: #123968;
+}
+
+.login-info {
+  margin-top: 1rem;
+}
+
+.login-info p {
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+  .login-kartu {
+    padding: 1rem;
+  }
+}
+
+
+/* Area pesan login: ruang tetap agar kartu tidak bergeser */
+.login-area-pesan {
+  min-height: 3.8rem;
+}
+
+.login-area-pesan .login-pesan {
+  margin: 0 0 0.8rem;
+  padding: 0.65rem;
+  color: #b91c1c;
+  background: #fff5f5;
+  border-left: 3px solid #dc2626;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* Garis merah pada kolom yang salah */
+.login-field input.login-input-salah {
+  border: 1px solid #dc2626;
+  background: #fff5f5;
+}
+
+.login-field input.login-input-salah:focus-visible {
+  outline: 2px solid #dc2626;
+  outline-offset: 2px;
+}
+
+
+/* Dashboard Petugas */
+#konten-utama > section[aria-labelledby="judul-ringkasan"],
+#konten-utama > section[aria-labelledby="judul-daftar-antrean"] {
+  min-width: 0;
+  padding: 1.35rem;
+  background: #ffffff;
+  border: 1px solid #dce1e7;
+  border-radius: 0.4rem;
+}
+
+/* Ringkasan dan aksi berada berdampingan */
+#konten-utama > section[aria-labelledby="judul-ringkasan"] {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 0.5rem 1.5rem;
+  margin-bottom: 1rem;
+}
+
+#konten-utama > section[aria-labelledby="judul-ringkasan"] h2 {
+  grid-column: 1;
+  margin: 0 0 0.35rem;
+}
+
+#konten-utama > section[aria-labelledby="judul-ringkasan"] ul {
+  grid-column: 1;
+  grid-row: 2 / span 3;
+  padding-left: 1.1rem;
+  margin: 0;
+}
+
+#konten-utama > section[aria-labelledby="judul-ringkasan"] p,
+#konten-utama > section[aria-labelledby="judul-ringkasan"] button {
+  grid-column: 2;
+  margin: 0.15rem 0;
+}
+
+#konten-utama > section[aria-labelledby="judul-ringkasan"] button {
+  justify-self: start;
+}
+
+#konten-utama > section[aria-labelledby="judul-daftar-antrean"] {
+  margin-top: 1rem;
+}
+
+#konten-utama > section[aria-labelledby="judul-daftar-antrean"] h2 {
+  margin-bottom: 1rem;
+}
+
+#konten-utama > section[aria-labelledby="judul-daftar-antrean"] table {
+  font-size: 0.9rem;
+}
+
+#konten-utama > section[aria-labelledby="judul-daftar-antrean"] th {
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+#konten-utama > section[aria-labelledby="judul-daftar-antrean"] td {
+  vertical-align: middle;
+}
+
+#konten-utama > section[aria-labelledby="judul-daftar-antrean"] button {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* Tata letak pada layar kecil */
+@media (max-width: 700px) {
+  #konten-utama > section[aria-labelledby="judul-ringkasan"] {
+    grid-template-columns: 1fr;
+  }
+
+  #konten-utama > section[aria-labelledby="judul-ringkasan"] h2,
+  #konten-utama > section[aria-labelledby="judul-ringkasan"] ul,
+  #konten-utama > section[aria-labelledby="judul-ringkasan"] p,
+  #konten-utama > section[aria-labelledby="judul-ringkasan"] button {
+    grid-column: 1;
+    grid-row: auto;
+  }
+
+  #konten-utama > section[aria-labelledby="judul-ringkasan"] {
+    gap: 0.65rem;
+  }
+}
+
+
+/* Dashboard Petugas — tata letak kartu */
+.dashboard-ringkasan-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: 1rem;
+}
+
+.dashboard-kartu,
+.dashboard-daftar {
+  min-width: 0;
+  padding: 1.35rem;
+  background: #ffffff;
+  border: 1px solid #dce1e7;
+  border-radius: 0.4rem;
+}
+
+.dashboard-kartu h2,
+.dashboard-daftar h2 {
+  margin: 0 0 1rem;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+/* Ringkasan hari ini */
+.dashboard-statistik {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.45rem 1rem;
+  margin: 0;
+}
+
+.dashboard-statistik dt {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.dashboard-statistik dd {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* Kartu aksi */
+.dashboard-tombol {
+  padding: 0.6rem 0.9rem;
+  background: #7189a7;
+  border: 1px solid #637d9d;
+  border-radius: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.dashboard-tombol:hover:not(:disabled) {
+  background: #526d8e;
+}
+
+.dashboard-keterangan {
+  margin: 0.8rem 0 0;
+  font-size: 0.85rem;
+  overflow-wrap: anywhere;
+}
+
+.dashboard-daftar {
+  margin-top: 1rem;
+}
+
+.dashboard-keterangan-tabel {
+  margin: 0 0 0.5rem;
+  color: #475569;
+  font-size: 0.8rem;
+}
+
+.dashboard-daftar .tabel-antrean {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.dashboard-daftar table {
+  min-width: 650px;
+  font-size: 0.85rem;
+}
+
+.dashboard-daftar th {
+  padding: 0.6rem 0.7rem;
+  background: #f3f4f6;
+  white-space: nowrap;
+}
+
+.dashboard-daftar td {
+  padding: 0.6rem 0.7rem;
+  white-space: nowrap;
+}
+
+.dashboard-nomor {
+  font-weight: 700;
+}
+
+.dashboard-status {
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.status-dipanggil {
+  color: #174a89;
+}
+
+.status-menunggu {
+  color: #a16207;
+}
+
+.dashboard-tombol-kecil {
+  padding: 0.4rem 0.65rem;
+  background: #174a89;
+  border-color: #174a89;
+  white-space: nowrap;
+}
+
+.dashboard-tombol-kecil:hover:not(:disabled) {
+  background: #123968;
+}
+
+/* Responsif */
+@media (max-width: 700px) {
+  .dashboard-ringkasan-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-kartu,
+  .dashboard-daftar {
+    padding: 1.1rem;
+  }
+}
+
+/* Menjaga ukuran tombol dashboard tetap stabil */
+.dashboard-ringkasan-grid .dashboard-tombol {
+  min-width: 235px;
+  min-height: 40px;
+}
+
+.dashboard-daftar .dashboard-tombol-kecil {
+  min-width: 150px;
+  min-height: 34px;
+}
+
+.dashboard-daftar tbody tr {
+  height: 43px;
+}
+
+
+/* Halaman Tidak Ditemukan — Modul 07 */
+.not-found-halaman {
+  width: 100%;
+}
+
+.not-found-pengantar {
+  margin: 1.5rem 0 1rem;
+  font-size: 0.9rem;
+}
+
+.not-found-kartu {
+  padding: 1.35rem;
+  background: #ffffff;
+  border: 1px solid #dce1e7;
+  border-radius: 0.4rem;
+}
+
+.not-found-kartu h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1rem;
+}
+
+.not-found-kartu ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.not-found-kartu li {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+}
+
+.not-found-kartu a {
+  color: #174a89;
+}
+
+.not-found-kartu a:hover {
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .not-found-kartu {
+    padding: 1rem;
+  }
+}

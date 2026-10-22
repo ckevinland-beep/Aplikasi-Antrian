@@ -1,33 +1,33 @@
 import { STATUS } from '../queue.js';
 
 export default function QueueStatus({ antrean }) {
-  if (!antrean) {
-    return (
-      <section aria-labelledby="judul-status-antrean">
-        <h2 id="judul-status-antrean">Status Antrean Saya</h2>
-        <p>Anda belum mengambil nomor antrean.</p>
-      </section>
-    );
-  }
+  let keterangan = 'Belum mengambil nomor';
 
-  let keterangan = 'Menunggu giliran';
-
-  if (antrean.status === STATUS.CALLED) {
-    keterangan = 'Nomor Anda sedang dipanggil';
-  } else if (antrean.status === STATUS.COMPLETED) {
-    keterangan = 'Antrean Anda telah selesai';
+  if (antrean?.status === STATUS.WAITING) {
+    keterangan = 'WAITING. Simpan nomor ini.';
+  } else if (antrean?.status === STATUS.CALLED) {
+    keterangan = 'Nomor Anda sedang dipanggil.';
+  } else if (antrean?.status === STATUS.COMPLETED) {
+    keterangan = 'Antrean Anda telah selesai.';
   }
 
   return (
-    <section aria-labelledby="judul-status-antrean">
-      <h2 id="judul-status-antrean">Status Antrean Saya</h2>
+    <section
+      className="kartu-ambil kartu-nomor-saya"
+      aria-labelledby="judul-status-antrean"
+    >
+      <h2 id="judul-status-antrean">Nomor Antrean Anda</h2>
 
-      <p>
-        Nomor antrean: <strong>{antrean.queueNumber}</strong>
-      </p>
+      {antrean ? (
+        <p className="nomor-antrean nomor-saya">
+          {antrean.queueNumber}
+        </p>
+      ) : (
+        <p className="nomor-belum-ada">—</p>
+      )}
 
-      <p>
-        Status: <strong>{keterangan}</strong>
+      <p className="status-nomor">
+        Status: {keterangan}
       </p>
     </section>
   );
