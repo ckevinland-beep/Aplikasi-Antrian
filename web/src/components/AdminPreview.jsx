@@ -6,6 +6,20 @@ export default function AdminPreview({
   sibuk = false,
   onPanggil,
 }) {
+  /* Antrean berikutnya hanya bisa dipanggil jika tidak ada
+     antrean yang sedang dipanggil dan masih ada yang menunggu. */
+  const bolehMemanggil = dipanggil === null && berikutnya !== null;
+
+  let keterangan;
+
+  if (dipanggil) {
+    keterangan = `Selesaikan ${dipanggil.queueNumber} lebih dulu sebelum memanggil antrean berikutnya.`;
+  } else if (berikutnya) {
+    keterangan = `Antrean berikutnya yang akan dipanggil: ${berikutnya.queueNumber}.`;
+  } else {
+    keterangan = 'Belum ada antrean yang menunggu.';
+  }
+
   return (
     <div className="dashboard-ringkasan-grid">
       <section
@@ -32,26 +46,26 @@ export default function AdminPreview({
       >
         <h2 id="judul-aksi">Aksi</h2>
 
-        <button
-          type="button"
-          className="dashboard-tombol"
-          disabled={sibuk || !berikutnya}
-          onClick={onPanggil}
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            onPanggil();
+          }}
         >
-          {sibuk ? 'Memproses...' : 'Panggil Antrean Berikutnya'}
-        </button>
+          <button
+            type="submit"
+            className="dashboard-tombol"
+            disabled={!bolehMemanggil || sibuk}
+          >
+            {sibuk ? 'Memanggil…' : 'Panggil Antrean Berikutnya'}
+          </button>
+        </form>
 
-        <p className="dashboard-keterangan">
-          {berikutnya
-            ? `Antrean berikutnya yang akan dipanggil: ${berikutnya.queueNumber}.`
-            : 'Tidak ada antrean yang menunggu.'}
+        <p className="dashboard-keterangan">{keterangan}</p>
+
+        <p className="pesan-galat" role="alert">
+          {pesan}
         </p>
-
-        {pesan && (
-          <p className="pesan-galat" role="alert">
-            {pesan}
-          </p>
-        )}
       </section>
     </div>
   );

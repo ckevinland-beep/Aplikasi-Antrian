@@ -1,153 +1,82 @@
-# QueueApp — UI Flow Documentation
+# QueueApp — UI Flow
 
-## 1. Gambaran Umum
+## 1. Peta Layar
 
-Dokumen ini menjelaskan alur antarmuka dan interaksi pengguna pada QueueApp sejak rancangan awal hingga integrasi React Router pada Minggu 07.
+QueueApp adalah aplikasi antrean dengan dua jenis pengguna utama: pengunjung dan petugas. Pada Week 08, antarmuka menggunakan React dan React Router untuk menampilkan halaman dalam satu aplikasi web.
 
-Aplikasi memiliki dua peran utama, yaitu pengunjung dan petugas. Pengunjung menggunakan aplikasi untuk melihat serta mengambil nomor antrean, sedangkan petugas mengelola antrean melalui dashboard.
+| Layar | Route | Pengguna | Fungsi |
+|---|---|---|---|
+| Antrean Saat Ini | `/` | Pengunjung | Melihat informasi antrean dan masuk ke halaman pengambilan nomor |
+| Ambil Nomor | `/queue` | Pengunjung | Membuat nomor antrean dan melihat daftar/status antrean |
+| Masuk sebagai Petugas | `/admin/login` | Petugas | Memvalidasi kelengkapan dan format isian login |
+| Dashboard Petugas | `/admin/dashboard` | Petugas | Memanggil dan menyelesaikan antrean |
+| Not Found | Route tidak dikenal | Semua pengguna | Menampilkan halaman pemulihan untuk alamat yang tidak terdaftar |
 
-## 2. Perkembangan Antarmuka Minggu 01–07
+## 2. Alur Pengunjung
 
-### Minggu 01 — Discovery & Environment
+1. Pengunjung membuka halaman Antrean Saat Ini pada route `/`.
+2. Pengunjung membuka halaman Ambil Nomor pada route `/queue`.
+3. Pengunjung mengambil nomor antrean.
+4. Aplikasi membuat nomor antrean baru, misalnya A001, kemudian A002.
+5. Pengunjung dapat melihat data antrean yang tersedia.
+6. Data antrean disimpan pada `localStorage` browser sehingga tetap tersedia setelah halaman dimuat ulang pada browser yang sama.
 
-Tahap awal berfokus pada persiapan lingkungan pengembangan dan pengujian halaman placeholder. Alur pengguna belum diimplementasikan.
+## 3. Alur Petugas
 
-### Minggu 02 — Requirements & System Design
+1. Petugas membuka `/admin/login`.
+2. Petugas mengisi email dan password.
+3. Form memeriksa kelengkapan isian dan format email.
+4. Jika validasi form berhasil, petugas diarahkan ke `/admin/dashboard`.
+5. Petugas menekan tombol **Panggil Antrean Berikutnya**.
+6. Antrean menunggu terdepan berubah menjadi `CALLED`.
+7. Selama masih ada antrean berstatus `CALLED`, tombol panggil berikutnya dinonaktifkan dan petugas harus menyelesaikan antrean tersebut terlebih dahulu.
+8. Petugas menekan tombol **Selesaikan** pada antrean yang sedang dipanggil.
+9. Antrean berubah menjadi `COMPLETED`, kemudian tombol panggil berikutnya dapat digunakan kembali.
+10. Petugas dapat memanggil antrean menunggu berikutnya.
 
-Kebutuhan pengguna dan fitur utama ditetapkan sebagai dasar pembuatan halaman. Dua peran yang digunakan adalah pengunjung dan petugas.
+**Aturan utama FR-06:** satu aksi pemanggilan hanya mengubah satu antrean. Pemanggilan berikutnya tidak boleh menyelesaikan antrean yang sedang dipanggil secara otomatis.
 
-### Minggu 03 — UI/UX & HTML
+## 4. Penanganan Keadaan dan Kesalahan
 
-Empat halaman awal disusun menggunakan HTML semantik:
+- **Memuat:** aplikasi menampilkan keadaan memuat ketika data sedang diambil.
+- **Galat:** aplikasi menampilkan pesan kesalahan ketika operasi data gagal.
+- **Coba lagi:** pengguna dapat mencoba kembali pemuatan data setelah terjadi kegagalan.
+- **Validasi form:** form login menampilkan pesan ketika isian kosong atau format email tidak valid.
+- **Antrean tidak tersedia:** aplikasi menolak pemanggilan apabila tidak ada antrean menunggu.
+- **Antrean masih dipanggil:** aplikasi menolak pemanggilan berikutnya sebelum antrean saat ini diselesaikan.
+- **Route tidak dikenal:** aplikasi menampilkan halaman Not Found dan menyediakan navigasi pemulihan.
 
-1. Antrean Saat Ini.
-2. Ambil Nomor Antrean.
-3. Masuk sebagai Petugas.
-4. Dashboard Petugas.
+Simulasi kegagalan dapat diaktifkan melalui konstanta `SIMULASI_GAGAL` pada `web/src/api/queueApi.js`. Setelah pengujian, nilainya harus dikembalikan menjadi `false`.
 
-Pada tahap ini, struktur antarmuka sudah dibuat, tetapi belum memiliki CSS dan perilaku JavaScript.
+## 5. Struktur Antarmuka
 
-### Minggu 04 — CSS & Responsive Design
+Aplikasi menggunakan satu dokumen HTML dan React untuk merender halaman sesuai route.
 
-Tampilan keempat halaman ditata menggunakan CSS dengan pendekatan mobile-first. Navigasi, formulir, tombol, dan tabel disesuaikan agar lebih nyaman digunakan pada ukuran layar berbeda.
+- `web/src/main.jsx` menjadi titik masuk aplikasi.
+- `web/src/App.jsx` mengatur route dan komponen halaman.
+- `web/src/pages/` berisi komponen halaman.
+- `web/src/components/` berisi komponen antarmuka yang digunakan kembali.
+- `web/src/useQueue.js` mengelola state antrean dan status operasi data.
+- `web/src/api/queueApi.js` menjadi lapisan akses data.
+- `web/src/queue.js` menerapkan aturan bisnis antrean.
+- `web/src/storage.js` menangani penyimpanan antrean di `localStorage`.
 
-### Minggu 05 — JavaScript
+## 6. Aksesibilitas dan Navigasi
 
-Interaksi mulai diterapkan. Pengunjung dapat mengambil nomor antrean, sedangkan petugas dapat memanggil dan menyelesaikan antrean. Validasi formulir dan perubahan tampilan berdasarkan status antrean juga ditambahkan.
+Antarmuka menggunakan elemen dan kontrol yang sesuai dengan fungsi masing-masing. Navigasi antarrute ditangani oleh React Router. Halaman yang tidak ditemukan menyediakan cara untuk kembali ke halaman aplikasi.
 
-### Minggu 06 — React + Vite
+Validasi form memberikan pesan kepada pengguna saat isian tidak memenuhi ketentuan. Status antrean juga ditampilkan sebagai teks, bukan hanya melalui warna.
 
-Antarmuka mulai disusun menggunakan React. Komponen dan halaman dipisahkan agar lebih mudah digunakan kembali dan dirawat.
+## 7. Batasan Week 08
 
-### Minggu 07 — React Integration & Routing
+- Data antrean masih disimpan secara lokal di browser melalui `localStorage`.
+- Lapisan `queueApi.js` masih berupa mock dan belum mengirim permintaan ke API server sungguhan.
+- MySQL dan layanan server pada lingkungan Docker belum digunakan sebagai backend antrean aktif.
+- Login admin baru melakukan validasi form dan belum memverifikasi kredensial atau menerapkan autentikasi sungguhan.
+- Penyimpanan lokal tidak menyinkronkan data antarbrowser atau perangkat.
 
-Navigasi dipindahkan ke React Router. Aplikasi menggunakan satu dokumen HTML dengan empat path utama dan satu halaman NotFound. Data antrean dikelola melalui satu pemilik state dan lapisan data berbasis Promise.
+## 8. Hasil Pengujian Week 08
 
-## 3. Alur Pengunjung — Melihat Antrean
+Demo utama telah dijalankan dan dilaporkan berhasil, meliputi pengambilan nomor antrean, validasi form login, pemanggilan dan penyelesaian antrean secara bergantian, navigasi Back, halaman Not Found, reload halaman, persistensi data lokal, serta simulasi kegagalan dan pemulihan konfigurasi.
 
-1. Pengunjung membuka halaman utama (`/`).
-2. Sistem memuat data antrean.
-3. Sistem menampilkan nomor yang sedang dipanggil dan antrean yang masih menunggu.
-4. Jika data gagal dimuat, sistem menampilkan pesan kesalahan dan tombol untuk mencoba kembali.
-5. Pengunjung dapat berpindah ke halaman pengambilan nomor melalui navigasi.
-
-## 4. Alur Pengunjung — Mengambil Nomor
-
-1. Pengunjung membuka halaman `/queue`.
-2. Sistem menampilkan data antrean dan formulir pengambilan nomor.
-3. Pengunjung menekan tombol **Ambil Nomor Antrean**.
-4. Sistem memproses permintaan melalui lapisan data berbasis Promise.
-5. Jika berhasil, nomor antrean baru ditambahkan ke daftar dan status nomor milik pengunjung ditampilkan.
-6. Tombol dinonaktifkan sementara ketika permintaan sedang diproses.
-7. Jika terjadi kesalahan, sistem menampilkan pesan kesalahan agar pengguna mengetahui bahwa permintaan belum berhasil.
-
-## 5. Alur Petugas — Login
-
-1. Petugas membuka halaman `/admin/login`.
-2. Petugas memasukkan email dan kata sandi.
-3. Sistem memeriksa apakah kolom wajib telah diisi.
-4. Jika kolom belum lengkap, pesan validasi ditampilkan.
-5. Jika input memenuhi pemeriksaan dasar, sistem mengarahkan pengguna ke `/admin/dashboard`.
-
-**Catatan:** Login masih berupa simulasi. Pengisian email dan kata sandi belum memverifikasi identitas melalui server.
-
-## 6. Alur Petugas — Dashboard
-
-1. Petugas membuka dashboard melalui halaman login atau navigasi.
-2. Sistem memuat data antrean.
-3. Dashboard menampilkan ringkasan jumlah antrean menunggu, sedang dipanggil, selesai, dan total antrean.
-4. Dashboard menampilkan antrean yang sedang dipanggil serta antrean berikutnya.
-5. Petugas dapat memilih aksi panggil berikutnya atau menyelesaikan antrean yang sedang dipanggil.
-6. Sistem memperbarui data dan menampilkan hasil perubahan pada dashboard.
-7. Jika data gagal dimuat, sistem menampilkan pesan kesalahan dan tombol coba lagi.
-
-## 7. Alur Memanggil Antrean Berikutnya
-
-1. Petugas membuka dashboard.
-2. Sistem mencari antrean berstatus `WAITING` yang berada paling awal dalam urutan antrean.
-3. Petugas menekan tombol **Panggil Antrean Berikutnya**.
-4. Sistem mengubah status antrean tersebut menjadi `CALLED`.
-5. Jika terdapat antrean lain yang sebelumnya berstatus `CALLED`, antrean tersebut diselesaikan sesuai aturan bisnis yang diterapkan.
-6. Dashboard memperbarui ringkasan dan daftar antrean.
-
-Jika tidak ada antrean yang menunggu, sistem tidak melakukan perubahan dan menampilkan pesan bahwa tidak ada antrean yang menunggu.
-
-## 8. Alur Menyelesaikan Antrean
-
-1. Petugas melihat daftar antrean aktif pada dashboard.
-2. Petugas menekan tombol **Selesaikan** pada antrean yang sedang dipanggil.
-3. Sistem memeriksa apakah perubahan status diperbolehkan.
-4. Jika valid, status antrean berubah menjadi `COMPLETED`.
-5. Data diperbarui dan dashboard menampilkan kondisi terbaru.
-
-Antrean yang telah selesai tidak lagi ditampilkan sebagai antrean aktif pada tabel petugas.
-
-## 9. Status Antrean
-
-QueueApp menggunakan tiga status utama:
-
-- `WAITING` — antrean menunggu giliran.
-- `CALLED` — antrean sedang dipanggil.
-- `COMPLETED` — antrean telah selesai.
-
-Perubahan status mengikuti aturan bisnis pada modul antrean, bukan ditentukan secara bebas oleh halaman.
-
-## 10. Navigasi Minggu 07
-
-Aplikasi memiliki path berikut:
-
-- `/` — Antrean Saat Ini.
-- `/queue` — Ambil Nomor Antrean.
-- `/admin/login` — Masuk sebagai Petugas.
-- `/admin/dashboard` — Dashboard Petugas.
-- `*` — NotFound untuk alamat yang tidak terdaftar.
-
-Perpindahan halaman dilakukan menggunakan React Router sehingga dokumen HTML tidak perlu dimuat ulang setiap kali pengguna berpindah halaman.
-
-Navigasi menggunakan layout bersama agar identitas aplikasi, menu, judul halaman, dan bagian footer tetap konsisten.
-
-## 11. Kondisi Antarmuka
-
-Saat mengambil data, aplikasi menampilkan salah satu kondisi berikut:
-
-- **Memuat:** sistem sedang mengambil data.
-- **Siap:** data berhasil dimuat dan konten ditampilkan.
-- **Galat:** data gagal dimuat, disertai pesan kesalahan dan tombol coba lagi.
-
-Ketika aksi sedang diproses, tombol terkait dapat dinonaktifkan untuk mengurangi risiko pengiriman aksi berulang.
-
-## 12. Responsivitas dan Aksesibilitas
-
-Antarmuka dikembangkan dengan pendekatan mobile-first. Navigasi dapat membungkus ke baris berikutnya, tabel antrean dapat digulir secara horizontal ketika ruang layar terbatas, dan formulir menggunakan label yang terhubung dengan input.
-
-Struktur halaman menggunakan elemen HTML semantik, judul yang jelas, serta indikator fokus untuk membantu navigasi menggunakan papan ketik.
-
-## 13. Batasan Alur Saat Ini
-
-- Data antrean masih dikelola melalui lapisan data simulasi di sisi klien.
-- Perubahan data belum tersinkronisasi secara terpusat antarperangkat.
-- Login belum menggunakan autentikasi sungguhan.
-- Belum ada API server aktif yang menangani operasi antrean.
-- Halaman NotFound hanya menangani alamat yang tidak terdaftar dalam konfigurasi routing aplikasi.
-
-Dokumentasi ini menggambarkan alur QueueApp hingga Minggu 07. Fitur tambahan akan mengikuti kebutuhan pada modul praktikum berikutnya.
+Rincian skenario demo dicatat pada `docs/uts-checkpoint.md`.

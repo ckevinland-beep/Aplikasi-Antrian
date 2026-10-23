@@ -5,7 +5,7 @@ export default function NotFoundPage() {
   return (
     <Layout
       judul="Halaman Tidak Ditemukan"
-      catatan="Minggu 07: routing sisi klien. Alamat yang tidak terdaftar berakhir di halaman ini."
+      catatan="Minggu 08: routing sisi klien menampilkan halaman pemulihan untuk alamat yang tidak terdaftar."
     >
       <div className="not-found-halaman">
         <p className="not-found-pengantar">

@@ -4,9 +4,9 @@
 
 QueueApp adalah aplikasi antrean sederhana yang dikembangkan sebagai proyek praktikum mata kuliah Web and Mobile Technology. Aplikasi ini membantu pengunjung mengambil nomor antrean dan melihat status antrean, sedangkan petugas dapat memantau, memanggil, dan menyelesaikan antrean.
 
-Pengembangan QueueApp dilakukan secara bertahap. Minggu 01 berfokus pada persiapan lingkungan, kemudian dilanjutkan dengan perancangan kebutuhan, struktur HTML, CSS responsif, JavaScript, React + Vite, serta integrasi React Router dan lapisan data pada Minggu 07.
+Pengembangan QueueApp dilakukan secara bertahap. Minggu 01 berfokus pada persiapan lingkungan, kemudian dilanjutkan dengan perancangan kebutuhan, struktur HTML, CSS responsif, JavaScript, React + Vite, integrasi React Router, dan penyempurnaan Web MVP pada Minggu 08.
 
-Pada tahap Minggu 07, aplikasi masih menggunakan simulasi data di sisi klien. Integrasi dengan API server sungguhan dan database terpusat belum menjadi bagian dari implementasi saat ini.
+Pada checkpoint Week 08, aplikasi masih menggunakan penyimpanan lokal di sisi klien. Integrasi dengan REST API sungguhan dan database terpusat belum menjadi bagian dari implementasi antrean saat ini.
 
 ## 2. Tujuan Sistem
 
@@ -23,6 +23,7 @@ QueueApp dikembangkan untuk:
 ### 3.1 Pengunjung
 
 Pengunjung dapat:
+
 - Melihat antrean yang sedang dipanggil.
 - Melihat daftar antrean yang menunggu.
 - Mengambil nomor antrean baru.
@@ -31,6 +32,7 @@ Pengunjung dapat:
 ### 3.2 Petugas
 
 Petugas dapat:
+
 - Membuka halaman login.
 - Mengakses dashboard melalui simulasi login.
 - Melihat ringkasan dan daftar antrean.
@@ -39,7 +41,7 @@ Petugas dapat:
 
 Login pada tahap ini masih berupa simulasi dan belum menggunakan autentikasi sungguhan.
 
-## 4. Perkembangan Arsitektur Minggu 01–07
+## 4. Perkembangan Arsitektur Minggu 01–08
 
 ### Minggu 01 — Discovery & Environment
 
@@ -55,7 +57,7 @@ Pada tahap awal, aplikasi masih berupa placeholder. Tujuannya adalah memastikan 
 
 Tahap ini berfokus pada pendefinisian masalah, kebutuhan pengguna, ruang lingkup aplikasi, dan rancangan awal sistem.
 
-Dokumentasi kebutuhan menjadi dasar untuk menentukan fitur yang akan dikembangkan, peran pengguna, batas MVP, serta fitur yang belum dikerjakan pada tahap awal.
+Dokumentasi kebutuhan menjadi dasar untuk menentukan fitur, peran pengguna, batas MVP, serta fitur yang belum dikerjakan pada tahap awal.
 
 ### Minggu 03 — UI/UX & HTML
 
@@ -66,7 +68,7 @@ Struktur antarmuka dibuat menggunakan HTML semantik dengan empat halaman awal:
 - `admin-login.html` — Login Petugas.
 - `admin-dashboard.html` — Dashboard Petugas.
 
-Tahap ini berfokus pada struktur konten, label formulir, tabel, navigasi, dan aksesibilitas dasar. CSS dan JavaScript belum menjadi bagian implementasi minggu ini.
+Tahap ini berfokus pada struktur konten, label formulir, tabel, navigasi, dan aksesibilitas dasar.
 
 ### Minggu 04 — CSS & Responsive Design
 
@@ -88,11 +90,19 @@ Pengelolaan data antrean menggunakan fungsi dan hook agar perubahan data dapat d
 
 ### Minggu 07 — React Integration & Routing
 
-Pada tahap ini, aplikasi menggunakan satu dokumen HTML dan React Router untuk berpindah halaman tanpa memuat ulang seluruh dokumen.
+Aplikasi menggunakan satu dokumen HTML dan React Router untuk berpindah halaman tanpa memuat ulang seluruh dokumen.
 
 `App.jsx` menjadi pemilik utama state antrean melalui `useQueue.js`. Lapisan data pada `api/queueApi.js` menyediakan operasi berbasis Promise, sedangkan `DataState.jsx` menangani keadaan memuat dan galat.
 
-Lapisan tersebut masih menggunakan data lokal dan belum memanggil API server sungguhan.
+Lapisan tersebut masih menggunakan penyimpanan lokal dan belum memanggil REST API sungguhan.
+
+### Minggu 08 — UTS / Web MVP Checkpoint
+
+Checkpoint Week 08 menyempurnakan alur utama Web MVP dan aturan pemanggilan antrean.
+
+Pemanggilan antrean berikutnya tidak boleh otomatis menyelesaikan antrean yang sedang berstatus `CALLED`. Petugas harus menyelesaikan antrean tersebut terlebih dahulu sebelum memanggil antrean berikutnya.
+
+Penanganan aksi juga dipisahkan dari proses penyegaran daftar agar kegagalan penyegaran tidak membuat aksi yang telah berhasil dilaporkan sebagai gagal.
 
 ## 5. Teknologi yang Digunakan
 
@@ -104,45 +114,50 @@ Lapisan tersebut masih menggunakan data lokal dan belum memanggil API server sun
 - **React:** membangun antarmuka berbasis komponen.
 - **Vite:** menjalankan server pengembangan dan proses build.
 - **React Router:** mengelola navigasi sisi klien.
-- **localStorage:** digunakan oleh lapisan penyimpanan lokal untuk mempertahankan data pada peramban.
+- **localStorage:** mempertahankan data antrean secara lokal pada peramban.
 
-## 6. Struktur Arsitektur Saat Minggu 07
+## 6. Struktur Arsitektur pada Checkpoint Week 08
 
 ```text
 Browser
-  |
-  v
+   |
+   v
 web/index.html
-  |
-  v
+   |
+   v
 src/main.jsx
-  |
-  v
+   |
+   v
 BrowserRouter
-  |
-  v
+   |
+   v
 App.jsx
-  |
-  +-- HomePage
-  +-- TakeQueuePage
-  +-- AdminLoginPage
-  +-- AdminDashboardPage
-  +-- NotFoundPage
-  |
-  v
+   |
+   +-- HomePage
+   +-- TakeQueuePage
+   +-- AdminLoginPage
+   +-- AdminDashboardPage
+   +-- NotFoundPage
+   |
+   v
 useQueue.js
-  |
-  v
+   |
+   v
 api/queueApi.js
-  |
-  +-- queue.js
-  |     +-- Aturan bisnis antrean
-  |
-  +-- storage.js
-        +-- Penyimpanan lokal
+   |
+   +-- queue.js
+   |     +-- Aturan bisnis antrean
+   |
+   +-- storage.js
+         +-- Penyimpanan lokal
+              |
+              v
+           localStorage
 ```
 
 Komponen `Layout.jsx` digunakan bersama untuk menyediakan kerangka halaman dan navigasi. `DataState.jsx` digunakan untuk menampilkan status pemuatan data, pesan galat, atau konten halaman.
+
+Arsitektur ini menggambarkan jalur pengelolaan data pada sisi klien. Server dan MySQL telah disiapkan dalam lingkungan pengembangan, tetapi belum menjadi backend aktif untuk operasi antrean pada checkpoint ini.
 
 ## 7. Routing
 
@@ -158,9 +173,10 @@ Navigasi dikelola oleh React Router tanpa memuat ulang seluruh dokumen HTML.
 
 ## 8. Pengelolaan Data dan Aturan Bisnis
 
-`App.jsx` memanggil `useQueue.js` sebagai pemilik state antrean. Halaman menerima data dan fungsi aksi melalui props sehingga setiap halaman tidak membuat salinan state antrean sendiri.
+`App.jsx` menggunakan `useQueue.js` sebagai pemilik state antrean. Halaman menerima data dan fungsi aksi melalui props sehingga setiap halaman tidak membuat salinan state antrean sendiri.
 
 `queueApi.js` menyediakan operasi untuk:
+
 - Membaca daftar antrean.
 - Membuat antrean baru.
 - Memanggil antrean berikutnya.
@@ -170,6 +186,25 @@ Operasi tersebut menggunakan Promise untuk menyimulasikan proses permintaan data
 
 `queue.js` berisi aturan bisnis, termasuk pembuatan nomor antrean dan perubahan status. `storage.js` menangani pembacaan serta penyimpanan data lokal.
 
+### 8.1 Aturan Memanggil Antrean
+
+Pemanggilan antrean harus mengikuti aturan berikut:
+
+1. Sistem mencari antrean berstatus `WAITING` yang paling awal.
+2. Jika tidak ada antrean berstatus `WAITING`, tidak ada antrean baru yang dipanggil.
+3. Jika masih ada antrean berstatus `CALLED`, pemanggilan baru ditolak.
+4. Jika tidak ada antrean yang sedang dipanggil, tepat satu antrean berstatus `WAITING` dapat berubah menjadi `CALLED`.
+5. Petugas harus menyelesaikan antrean berstatus `CALLED` sebelum memanggil antrean berikutnya.
+
+Dengan demikian, satu aksi pemanggilan hanya mengubah satu antrean dan tidak sekaligus menyelesaikan antrean sebelumnya.
+
+### 8.2 Aturan Menyelesaikan Antrean
+
+1. Petugas memilih aksi **Selesaikan** pada antrean yang sedang dipanggil.
+2. Sistem memeriksa apakah perubahan status diperbolehkan.
+3. Jika valid, status antrean berubah dari `CALLED` menjadi `COMPLETED`.
+4. Setelah penyelesaian berhasil, petugas dapat memanggil antrean berikutnya jika masih ada antrean menunggu.
+
 ## 9. Status Antrean
 
 Antrean memiliki tiga status utama:
@@ -178,11 +213,11 @@ Antrean memiliki tiga status utama:
 - `CALLED`: antrean sedang dipanggil.
 - `COMPLETED`: antrean telah selesai.
 
-Sistem memanggil antrean berdasarkan urutan antrean yang menunggu. Petugas tidak memilih antrean secara sembarangan melalui fitur panggil berikutnya.
+Perubahan status mengikuti aturan bisnis di lapisan antrean. Halaman tidak boleh mengubah status secara bebas tanpa mengikuti aturan tersebut.
 
 ## 10. Penanganan Kondisi Antarmuka
 
-Pada Minggu 07, antarmuka memiliki tiga kondisi data:
+Aplikasi menangani tiga kondisi utama data:
 
 1. **Memuat:** ditampilkan saat data sedang diminta.
 2. **Siap:** data berhasil diperoleh dan konten dapat ditampilkan.
@@ -190,18 +225,20 @@ Pada Minggu 07, antarmuka memiliki tiga kondisi data:
 
 Aksi yang sedang diproses juga menggunakan status sibuk agar tombol terkait tidak mudah ditekan berulang kali.
 
+Aksi antrean dan penyegaran daftar ditangani secara terpisah. Jika aksi sudah berhasil tetapi penyegaran daftar gagal, hasil aksi tersebut tidak boleh dilaporkan sebagai gagal hanya karena proses penyegaran mengalami masalah.
+
 ## 11. Lingkungan Pengembangan
 
 Docker Compose menjalankan layanan web, server, dan MySQL. Layanan web menggunakan Vite untuk pengembangan antarmuka React.
 
-Pada tahap Minggu 07, layanan server dan MySQL sudah disiapkan dalam lingkungan pengembangan, tetapi operasi antrean yang dibahas pada dokumentasi ini masih menggunakan lapisan data lokal. Keduanya belum menjadi backend aktif untuk operasi antrean.
+Pada checkpoint Week 08, layanan server dan MySQL masih merupakan bagian dari lingkungan pengembangan. Operasi antrean pada Web MVP masih menggunakan lapisan data lokal, bukan backend aktif yang menyimpan data pada database terpusat.
 
-## 12. Batasan Sistem Saat Minggu 07
+## 12. Batasan Sistem pada Checkpoint Week 08
 
-- Belum menggunakan API server sungguhan untuk operasi antrean.
+- Operasi antrean belum menggunakan REST API sungguhan.
 - Data antrean belum disimpan dalam database terpusat.
 - Data lokal tidak otomatis tersinkronisasi antarperangkat.
 - Login petugas masih berupa simulasi.
-- Belum tersedia autentikasi dan otorisasi pengguna sungguhan.
+- Autentikasi dan otorisasi pengguna sungguhan belum tersedia.
 
-Batasan tersebut menjadi bagian dari ruang lingkup pengembangan bertahap QueueApp.
+Batasan tersebut menjadi bagian dari ruang lingkup pengembangan bertahap QueueApp. Integrasi backend dan database akan dikerjakan pada minggu praktikum berikutnya.

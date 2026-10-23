@@ -15,8 +15,8 @@ export default function HomePage({
 }) {
   return (
     <Layout
-      judul="Antrean Saat Ini"
-      catatan="Pantau status antrean Anda melalui QueueApp."
+  judul="Antrean Saat Ini"
+  catatan="Minggu 08: checkpoint Web MVP. Seluruh alur antrean berjalan, tetapi datanya masih hidup di peramban ini — belum ada API maupun database."
     >
       <DataState
         status={status}

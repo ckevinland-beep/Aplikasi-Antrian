@@ -58,23 +58,26 @@ export function useQueue() {
     setSibuk(true);
     setPesan('');
 
+    let hasil = null;
+
     try {
-      const hasil = await aksi();
-      const antrean = await ambilDaftarAntrean();
-
-      setMuatan({
-        status: 'siap',
-        antrean,
-        galat: null,
-      });
-
-      return hasil;
+      hasil = await aksi();
     } catch (galat) {
       setPesan(galat.message);
-      return null;
-    } finally {
-      setSibuk(false);
     }
+
+    try {
+      setMuatan({
+        status: 'siap',
+        antrean: await ambilDaftarAntrean(),
+        galat: null,
+      });
+    } catch {
+      // Gagal menyegarkan daftar tidak membatalkan aksi yang berhasil.
+    }
+
+    setSibuk(false);
+    return hasil;
   }
 
   async function ambilNomor() {
