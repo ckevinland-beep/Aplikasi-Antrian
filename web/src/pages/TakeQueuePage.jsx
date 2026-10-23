@@ -17,7 +17,10 @@ export default function TakeQueuePage({
   const dipanggil = currentCalled(antrean);
 
   return (
-    <Layout judul="Ambil Nomor Antrean">
+    <Layout
+      judul="Ambil Nomor Antrean"
+      catatan="Minggu 08: pengunjung dapat mengambil nomor antrean dan melihat statusnya; data masih tersimpan di peramban ini."
+    >
       <DataState
         status={status}
         galat={galat}
