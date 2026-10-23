@@ -106,9 +106,20 @@ export function takeQueue(state) {
   };
 }
 
+
 /* Memanggil antrean tertua yang masih menunggu */
 export function callNext(state) {
-  const target = nextInLine(state);
+  const sedangDipanggil = currentCalled(state.queues);
+
+  if (sedangDipanggil) {
+    return {
+      ok: false,
+      code: 'QUEUE_ALREADY_CALLED',
+      message: `Antrean ${sedangDipanggil.queueNumber} masih dipanggil. Selesaikan lebih dulu.`,
+    };
+  }
+
+  const target = nextInLine(state.queues);
 
   if (!target) {
     return {
@@ -120,25 +131,11 @@ export function callNext(state) {
 
   const waktu = sekarang();
 
-  const queues = state.queues.map((queue) => {
-    if (queue.status === STATUS.CALLED) {
-      return {
-        ...queue,
-        status: STATUS.COMPLETED,
-        completedAt: waktu,
-      };
-    }
-
-    if (queue.id === target.id) {
-      return {
-        ...queue,
-        status: STATUS.CALLED,
-        calledAt: waktu,
-      };
-    }
-
-    return queue;
-  });
+  const queues = state.queues.map((queue) =>
+    queue.id === target.id
+      ? { ...queue, status: STATUS.CALLED, calledAt: waktu }
+      : queue,
+  );
 
   return {
     ok: true,
@@ -146,6 +143,7 @@ export function callNext(state) {
     queue: queues.find((queue) => queue.id === target.id),
   };
 }
+
 
 /* Menyelesaikan antrean tertentu */
 export function completeQueue(state, id) {
