@@ -4,7 +4,7 @@ QueueApp adalah aplikasi antrean sederhana yang dikembangkan secara bertahap dal
 
 ## Tujuan Proyek
 
-Proyek ini dikembangkan untuk menerapkan proses pengembangan aplikasi secara bertahap, mulai dari identifikasi kebutuhan, perancangan antarmuka, pembuatan fitur, hingga migrasi frontend menggunakan React, Vite, dan React Router.
+Proyek ini dikembangkan untuk menerapkan proses pengembangan aplikasi secara bertahap, mulai dari identifikasi kebutuhan, perancangan antarmuka, pembuatan fitur, hingga migrasi frontend menggunakan React, Vite, dan React Router serta pengembangan backend menggunakan Node.js dan Express.
 
 ## Fitur Utama
 
@@ -17,17 +17,20 @@ Proyek ini dikembangkan untuk menerapkan proses pengembangan aplikasi secara ber
 - Menampilkan keadaan memuat, galat, dan data kosong pada antarmuka.
 - Menyimpan data antrean pada browser menggunakan `localStorage`.
 - Menyediakan halaman pengunjung dan petugas melalui React Router.
+- Menyediakan REST API backend untuk pemeriksaan kesehatan server dan pengambilan daftar antrean.
 
-**Catatan:** Pada checkpoint Week 08, aplikasi masih berupa Web MVP berbasis frontend. Data antrean belum terhubung dengan REST API sungguhan maupun database terpusat. Formulir login juga belum menggunakan autentikasi sungguhan.
+**Catatan:** Pada checkpoint Week 08, aplikasi masih berupa Web MVP berbasis frontend. Pada Week 09, backend REST API menggunakan Node.js dan Express mulai dikembangkan dengan data mock di memori server. Frontend masih menggunakan `localStorage` dan belum terintegrasi dengan REST API. Database MySQL juga belum digunakan oleh backend untuk menyimpan data antrean. Formulir login belum menggunakan autentikasi sungguhan.
 
 ## Teknologi yang Digunakan
 
 - **HTML:** menyusun struktur dokumen aplikasi.
 - **CSS:** mengatur tampilan dan desain responsif.
 - **JavaScript:** menangani logika dan interaksi aplikasi.
+- **Node.js:** menjalankan lingkungan backend JavaScript.
+- **Express:** membangun REST API dan mengelola routing serta middleware backend.
 - **React:** membangun antarmuka berbasis komponen.
 - **Vite:** menyediakan development server dan proses build frontend.
-- **React Router:** mengelola navigasi ant halaman.
+- **React Router:** mengelola navigasi antarhalaman.
 - **localStorage:** menyimpan data antrean secara lokal pada browser.
 - **Docker Compose:** menjalankan lingkungan pengembangan.
 - **MySQL:** layanan database yang disiapkan dalam lingkungan proyek.
@@ -88,7 +91,7 @@ Checkpoint: `week-07`
 
 ### Week 08 — UTS / Web MVP
 
-Menyempurnakan checkpoint Web MVP dengan meninjau alur antrean, konsistensi antarmuka, penanganan galat, serta dokumentasi proyek.
+Checkpoint Week 08 menjadi titik pemeriksaan Web MVP sebelum pengembangan dilanjutkan ke tahap berikutnya. Tag `week-08` digunakan sebagai penanda checkpoint UTS.
 
 Perbaikan utama pada tahap ini meliputi:
 
@@ -98,7 +101,26 @@ Perbaikan utama pada tahap ini meliputi:
 - Menyesuaikan halaman dan navigasi dengan struktur React Router.
 - Memperbarui dokumentasi alur antarmuka, arsitektur, dan checkpoint UTS.
 
-Checkpoint Week 08 menjadi titik pemeriksaan Web MVP sebelum pengembangan dilanjutkan ke tahap berikutnya. Status akhir checkpoint dan tag akan dipastikan setelah pemeriksaan serta proses Git selesai.
+Checkpoint `week-08` telah digunakan sebagai penanda checkpoint UTS dan menjadi dasar pengembangan pada Week 09.
+
+### Week 09 — Node.js + Express
+
+Mengembangkan backend QueueApp menggunakan Node.js dan Express sebagai dasar penyediaan REST API.
+
+Implementasi pada tahap ini meliputi:
+
+- Menyiapkan project Express pada folder `server`.
+- Memisahkan kode backend ke dalam lapisan routes, controllers, dan services.
+- Menambahkan middleware untuk mencatat request, memvalidasi query, dan menangani route yang tidak ditemukan.
+- Menyediakan format respons sukses melalui properti `data`.
+- Menyediakan penanganan galat terpusat dengan format `error` yang konsisten.
+- Menambahkan endpoint `GET /api/health` untuk memeriksa kondisi server.
+- Menambahkan endpoint `GET /api/queues` untuk mengambil daftar antrean dari data mock.
+- Mendukung filter antrean berdasarkan status `WAITING`, `CALLED`, dan `COMPLETED`.
+
+Pada tahap ini, backend belum menggunakan database. Data antrean masih disimpan sementara di memori server dan frontend belum terhubung ke API Express.
+
+Checkpoint: `week-09` — akan ditetapkan setelah pemeriksaan akhir dan proses Git selesai.
 
 ## Menjalankan Proyek
 
@@ -153,13 +175,21 @@ Setelah layanan web berjalan, buka alamat berikut:
 - Login petugas: http://localhost:5173/admin/login
 - Dashboard petugas: http://localhost:5173/admin/dashboard
 
-Endpoint server placeholder tersedia di http://localhost:3001 apabila layanan tersebut dijalankan oleh konfigurasi proyek.
+### Endpoint Backend
 
-**Catatan:** Alamat di atas merupakan alamat lokal pengembangan. Keberhasilan akses bergantung pada layanan Docker atau development server yang sedang berjalan.
+- Health check: http://localhost:3001/api/health
+- Daftar antrean: http://localhost:3001/api/queues
+- Filter antrean: http://localhost:3001/api/queues?status=WAITING
+
+Status yang dapat digunakan untuk filter adalah `WAITING`, `CALLED`, dan `COMPLETED`.
+
+**Catatan:** Backend berjalan secara terpisah dari frontend. Data antrean backend masih berupa data mock di memori server dan belum terhubung dengan MySQL maupun frontend.
+
+Alamat di atas merupakan alamat lokal pengembangan. Keberhasilan akses bergantung pada layanan Docker atau development server yang sedang berjalan.
 
 ## Struktur Repository
 
-Struktur utama proyek setelah pengembangan React dan routing mencakup:
+Struktur utama proyek setelah pengembangan React, routing, dan backend Express mencakup:
 
 ```text
 Aplikasi-Antrian/
@@ -169,6 +199,28 @@ Aplikasi-Antrian/
 │   ├── ui-flow.md
 │   └── uts-checkpoint.md
 ├── server/
+│   ├── package.json
+│   ├── package-lock.json
+│   └── src/
+│       ├── config/
+│       │   └── index.js
+│       ├── controllers/
+│       │   ├── healthController.js
+│       │   └── queueController.js
+│       ├── middleware/
+│       │   ├── errorHandler.js
+│       │   ├── notFound.js
+│       │   ├── requestLogger.js
+│       │   └── validateQueueQuery.js
+│       ├── routes/
+│       │   ├── healthRoutes.js
+│       │   ├── index.js
+│       │   └── queueRoutes.js
+│       ├── services/
+│       │   └── queueService.js
+│       ├── apiError.js
+│       ├── app.js
+│       └── server.js
 ├── web/
 │   ├── index.html
 │   ├── package.json
@@ -201,12 +253,14 @@ Pengembangan dilakukan menggunakan Git dengan cabang kerja mingguan, pesan commi
 
 Checkpoint yang telah digunakan pada tahapan pengembangan meliputi `week-01`, `week-03`, `week-04`, `week-05`, `week-06`, dan `week-07`. Ketersediaan tag `week-02` perlu diperiksa pada repository.
 
-Checkpoint `week-08` akan ditetapkan setelah perubahan, dokumentasi, dan pemeriksaan akhir selesai dilakukan.
+Checkpoint `week-08` menjadi titik pemeriksaan Web MVP. Pengembangan backend dilanjutkan pada branch `week/09-express`. Tag `week-09` akan ditetapkan setelah perubahan, dokumentasi, dan pemeriksaan akhir selesai dilakukan.
 
 ## Status Pengembangan
 
-Pada Week 08, QueueApp berada pada tahap Web MVP berbasis React, Vite, dan React Router. Alur utama antrean menggunakan penyimpanan lokal pada browser, dengan perbaikan aturan pemanggilan antrean dan penanganan galat.
+Pada Week 09, QueueApp telah memiliki backend REST API menggunakan Node.js dan Express. Backend menyediakan endpoint health check dan daftar antrean dengan dukungan filter berdasarkan status.
 
-Aplikasi belum menggunakan REST API backend dan database terpusat sebagai sumber data aktif. Autentikasi petugas juga belum diterapkan secara sungguhan.
+Struktur backend telah dipisahkan ke dalam lapisan routes, controllers, dan services. Middleware digunakan untuk mencatat request, memvalidasi query, serta menangani galat dengan format respons yang konsisten.
+
+Data antrean pada backend masih menggunakan data mock di memori server dan belum terhubung dengan database MySQL. Frontend masih mengelola data antrean menggunakan `localStorage` dan belum terintegrasi dengan backend Express.
 
 Pengembangan berikutnya akan mengikuti modul praktikum, dengan menjaga konsistensi implementasi, dokumentasi, dan pengelolaan versi proyek.
