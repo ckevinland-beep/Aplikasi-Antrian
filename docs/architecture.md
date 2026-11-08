@@ -6,7 +6,9 @@ QueueApp adalah aplikasi antrean sederhana yang dikembangkan sebagai proyek prak
 
 Pengembangan QueueApp dilakukan secara bertahap. Minggu 01 berfokus pada persiapan lingkungan, kemudian dilanjutkan dengan perancangan kebutuhan, struktur HTML, CSS responsif, JavaScript, React + Vite, integrasi React Router, dan penyempurnaan Web MVP pada Minggu 08.
 
-Pada checkpoint Week 08, aplikasi masih menggunakan penyimpanan lokal di sisi klien. Integrasi dengan REST API sungguhan dan database terpusat belum menjadi bagian dari implementasi antrean saat ini.
+Pada Week 09, pengembangan dilanjutkan dengan membangun backend menggunakan Node.js dan Express. Backend menyediakan REST API untuk health check dan daftar antrean dengan data mock yang disimpan di memori server.
+
+Pada checkpoint Week 09, frontend dan backend masih berjalan secara terpisah. Frontend masih menggunakan penyimpanan lokal di sisi klien, sedangkan backend belum menggunakan MySQL sebagai penyimpanan data antrean.
 
 ## 2. Tujuan Sistem
 
@@ -17,6 +19,7 @@ QueueApp dikembangkan untuk:
 3. Membantu petugas mengelola antrean melalui dashboard.
 4. Menyediakan antarmuka yang dapat digunakan pada berbagai ukuran layar.
 5. Menerapkan pengembangan aplikasi secara bertahap dengan struktur kode yang terorganisasi.
+6. Menyediakan backend REST API sebagai dasar pengembangan dan integrasi berikutnya.
 
 ## 3. Peran Pengguna
 
@@ -41,7 +44,7 @@ Petugas dapat:
 
 Login pada tahap ini masih berupa simulasi dan belum menggunakan autentikasi sungguhan.
 
-## 4. Perkembangan Arsitektur Minggu 01–08
+## 4. Perkembangan Arsitektur Minggu 01–09
 
 ### Minggu 01 — Discovery & Environment
 
@@ -104,9 +107,25 @@ Pemanggilan antrean berikutnya tidak boleh otomatis menyelesaikan antrean yang s
 
 Penanganan aksi juga dipisahkan dari proses penyegaran daftar agar kegagalan penyegaran tidak membuat aksi yang telah berhasil dilaporkan sebagai gagal.
 
+### Minggu 09 — Node.js + Express
+
+Week 09 berfokus pada pembangunan backend menggunakan Node.js dan Express.
+
+Struktur backend dipisahkan ke dalam beberapa lapisan:
+
+- **Routes:** menentukan endpoint API dan menghubungkannya dengan controller.
+- **Controllers:** menangani request dan menyusun response API.
+- **Services:** menjalankan proses pengambilan dan pemfilteran data antrean.
+- **Middleware:** menangani pencatatan request, validasi query, route yang tidak ditemukan, dan error handling.
+- **ApiError:** menyediakan struktur galat API yang konsisten.
+
+Backend menyediakan dua endpoint utama, yaitu `GET /api/health` dan `GET /api/queues`. Data antrean masih menggunakan mock data di memori server dan belum disimpan ke MySQL.
+
 ## 5. Teknologi yang Digunakan
 
 - **Docker Compose:** menjalankan lingkungan pengembangan.
+- **Node.js:** menjalankan lingkungan backend JavaScript.
+- **Express:** membangun server dan REST API.
 - **MySQL:** layanan basis data yang disiapkan untuk pengembangan berikutnya.
 - **HTML:** menyusun struktur konten.
 - **CSS:** mengatur tampilan dan desain responsif.
@@ -116,7 +135,9 @@ Penanganan aksi juga dipisahkan dari proses penyegaran daftar agar kegagalan pen
 - **React Router:** mengelola navigasi sisi klien.
 - **localStorage:** mempertahankan data antrean secara lokal pada peramban.
 
-## 6. Struktur Arsitektur pada Checkpoint Week 08
+## 6. Struktur Arsitektur
+
+### 6.1 Arsitektur Frontend pada Checkpoint Week 08
 
 ```text
 Browser
@@ -157,9 +178,87 @@ api/queueApi.js
 
 Komponen `Layout.jsx` digunakan bersama untuk menyediakan kerangka halaman dan navigasi. `DataState.jsx` digunakan untuk menampilkan status pemuatan data, pesan galat, atau konten halaman.
 
-Arsitektur ini menggambarkan jalur pengelolaan data pada sisi klien. Server dan MySQL telah disiapkan dalam lingkungan pengembangan, tetapi belum menjadi backend aktif untuk operasi antrean pada checkpoint ini.
+Arsitektur tersebut menggambarkan jalur pengelolaan data pada sisi klien. Pada Week 08, operasi antrean masih menggunakan lapisan data lokal.
 
-## 7. Routing
+### 6.2 Arsitektur Backend pada Week 09
+
+```text
+HTTP Client
+    |
+    v
+Express Server
+    |
+    v
+Middleware
+    |
+    +-- Request Logger
+    |
+    v
+API Routes
+    |
+    +-- /api/health
+    |
+    +-- /api/queues
+           |
+           v
+       Controller
+           |
+           v
+        Service
+           |
+           v
+      Mock Queue Data
+      (In-Memory Server)
+
+Error Handling:
+    |
+    +-- ApiError
+    |
+    +-- Not Found Middleware
+    |
+    +-- Centralized Error Handler
+```
+
+Backend menggunakan pemisahan tanggung jawab antara routes, controllers, services, dan middleware.
+
+Request masuk melalui Express server, kemudian diteruskan ke route yang sesuai. Controller menangani request dan response, sedangkan service mengelola pengambilan serta pemfilteran data antrean.
+
+Jika terjadi kesalahan, middleware error handler menangani galat dan mengembalikan format respons yang konsisten.
+
+### 6.3 Hubungan Frontend dan Backend
+
+Pada checkpoint Week 09, frontend React dan backend Express belum terintegrasi.
+
+```text
+Frontend React
+    |
+    +-- useQueue.js
+    |
+    +-- queueApi.js
+    |
+    +-- queue.js
+    |
+    +-- storage.js
+          |
+          v
+      localStorage
+
+
+Backend Express
+    |
+    +-- API Routes
+    |
+    +-- Controllers
+    |
+    +-- Services
+          |
+          v
+      Mock Queue Data
+```
+
+Kedua bagian berjalan dalam lingkungan Docker Compose yang sama, tetapi operasi antrean frontend belum menggunakan endpoint REST API yang disediakan backend.
+
+## 7. Routing Frontend
 
 Aplikasi menggunakan empat path utama dan satu rute cadangan:
 
@@ -171,7 +270,7 @@ Aplikasi menggunakan empat path utama dan satu rute cadangan:
 
 Navigasi dikelola oleh React Router tanpa memuat ulang seluruh dokumen HTML.
 
-## 8. Pengelolaan Data dan Aturan Bisnis
+## 8. Pengelolaan Data dan Aturan Bisnis Frontend
 
 `App.jsx` menggunakan `useQueue.js` sebagai pemilik state antrean. Halaman menerima data dan fungsi aksi melalui props sehingga setiap halaman tidak membuat salinan state antrean sendiri.
 
@@ -205,7 +304,72 @@ Dengan demikian, satu aksi pemanggilan hanya mengubah satu antrean dan tidak sek
 3. Jika valid, status antrean berubah dari `CALLED` menjadi `COMPLETED`.
 4. Setelah penyelesaian berhasil, petugas dapat memanggil antrean berikutnya jika masih ada antrean menunggu.
 
-## 9. Status Antrean
+## 9. Backend API Week 09
+
+Backend menyediakan endpoint untuk memeriksa kondisi server dan mengambil daftar antrean.
+
+### 9.1 Health Check
+
+**Endpoint:**
+
+```http
+GET /api/health
+```
+
+Endpoint ini digunakan untuk memeriksa apakah layanan backend berjalan dengan baik.
+
+Respons sukses menggunakan properti `data` yang berisi informasi layanan, status, lingkungan, uptime, dan timestamp.
+
+### 9.2 Daftar Antrean
+
+**Endpoint:**
+
+```http
+GET /api/queues
+```
+
+Endpoint ini digunakan untuk mengambil daftar antrean mock yang tersedia di memori server.
+
+Respons sukses menggunakan properti `data` yang berisi daftar antrean.
+
+### 9.3 Filter Status Antrean
+
+Endpoint daftar antrean mendukung query parameter `status`.
+
+Contoh:
+
+```http
+GET /api/queues?status=WAITING
+GET /api/queues?status=CALLED
+GET /api/queues?status=COMPLETED
+```
+
+Status yang didukung:
+
+- `WAITING`
+- `CALLED`
+- `COMPLETED`
+
+Jika status tidak dikenal atau query tidak valid, API mengembalikan respons galat dengan status HTTP 400.
+
+### 9.4 Format Penanganan Galat
+
+Respons galat menggunakan struktur yang seragam:
+
+```json
+{
+  "error": {
+    "code": "INVALID_STATUS",
+    "message": "Status tidak dikenal."
+  }
+}
+```
+
+Struktur tersebut memisahkan kode galat dan pesan agar klien dapat memahami kesalahan yang terjadi.
+
+Route yang tidak tersedia ditangani oleh middleware not found dan menghasilkan respons HTTP 404.
+
+## 10. Status Antrean
 
 Antrean memiliki tiga status utama:
 
@@ -213,11 +377,13 @@ Antrean memiliki tiga status utama:
 - `CALLED`: antrean sedang dipanggil.
 - `COMPLETED`: antrean telah selesai.
 
-Perubahan status mengikuti aturan bisnis di lapisan antrean. Halaman tidak boleh mengubah status secara bebas tanpa mengikuti aturan tersebut.
+Pada frontend Week 08, perubahan status mengikuti aturan bisnis di lapisan antrean. Pada backend Week 09, status digunakan untuk memfilter data mock yang disediakan oleh service.
 
-## 10. Penanganan Kondisi Antarmuka
+## 11. Penanganan Kondisi Antarmuka dan Request API
 
-Aplikasi menangani tiga kondisi utama data:
+### 11.1 Kondisi Antarmuka
+
+Aplikasi frontend menangani tiga kondisi utama data:
 
 1. **Memuat:** ditampilkan saat data sedang diminta.
 2. **Siap:** data berhasil diperoleh dan konten dapat ditampilkan.
@@ -227,18 +393,80 @@ Aksi yang sedang diproses juga menggunakan status sibuk agar tombol terkait tida
 
 Aksi antrean dan penyegaran daftar ditangani secara terpisah. Jika aksi sudah berhasil tetapi penyegaran daftar gagal, hasil aksi tersebut tidak boleh dilaporkan sebagai gagal hanya karena proses penyegaran mengalami masalah.
 
-## 11. Lingkungan Pengembangan
+### 11.2 Middleware Backend
 
-Docker Compose menjalankan layanan web, server, dan MySQL. Layanan web menggunakan Vite untuk pengembangan antarmuka React.
+Backend Express menggunakan beberapa middleware dengan tanggung jawab berbeda:
 
-Pada checkpoint Week 08, layanan server dan MySQL masih merupakan bagian dari lingkungan pengembangan. Operasi antrean pada Web MVP masih menggunakan lapisan data lokal, bukan backend aktif yang menyimpan data pada database terpusat.
+- **Request Logger:** mencatat method, URL, status response, dan durasi request.
+- **Validate Queue Query:** memvalidasi query parameter `status` pada endpoint daftar antrean.
+- **Not Found:** menangani request ke route yang tidak tersedia.
+- **Error Handler:** menangani galat secara terpusat dan mengembalikan format respons yang konsisten.
 
-## 12. Batasan Sistem pada Checkpoint Week 08
+Pemisahan middleware membantu menjaga proses request dan penanganan galat agar lebih terorganisasi.
 
-- Operasi antrean belum menggunakan REST API sungguhan.
-- Data antrean belum disimpan dalam database terpusat.
-- Data lokal tidak otomatis tersinkronisasi antarperangkat.
+## 12. Lingkungan Pengembangan
+
+Docker Compose menjalankan tiga layanan utama:
+
+- **MySQL:** layanan basis data pada port host `3307`.
+- **Server:** backend Express pada port host `3001`.
+- **Web:** frontend React dan Vite pada port host `5173`.
+
+Backend menggunakan Node.js dan Express dengan source code yang berada pada folder `server`.
+
+Frontend menggunakan React dan Vite dengan source code yang berada pada folder `web`.
+
+Pada Week 09, ketiga layanan dapat dijalankan melalui Docker Compose. Namun, backend Express belum menggunakan MySQL untuk menyimpan data antrean. Data antrean backend masih berupa mock data yang disimpan di memori server.
+
+## 13. Struktur Folder Backend
+
+Struktur utama backend Week 09 adalah sebagai berikut:
+
+```text
+server/
+|
++-- package.json
++-- package-lock.json
+|
++-- src/
+    |
+    +-- apiError.js
+    +-- app.js
+    +-- server.js
+    |
+    +-- config/
+    |   +-- index.js
+    |
+    +-- controllers/
+    |   +-- healthController.js
+    |   +-- queueController.js
+    |
+    +-- middleware/
+    |   +-- errorHandler.js
+    |   +-- notFound.js
+    |   +-- requestLogger.js
+    |   +-- validateQueueQuery.js
+    |
+    +-- routes/
+    |   +-- healthRoutes.js
+    |   +-- index.js
+    |   +-- queueRoutes.js
+    |
+    +-- services/
+        +-- queueService.js
+```
+
+Setiap folder memiliki tanggung jawab tersendiri agar kode backend lebih mudah dipahami, diuji, dan dikembangkan.
+
+## 14. Batasan Sistem pada Checkpoint Week 09
+
+- Frontend masih menggunakan `localStorage` untuk operasi antrean.
+- Frontend belum terintegrasi dengan REST API Express.
+- Backend masih menggunakan mock data di memori server.
+- Backend belum menggunakan MySQL untuk penyimpanan data antrean.
+- Data mock backend akan kembali ke kondisi awal ketika proses server dimulai ulang.
 - Login petugas masih berupa simulasi.
 - Autentikasi dan otorisasi pengguna sungguhan belum tersedia.
+- Sinkronisasi data antrean antara frontend dan backend belum diterapkan.
 
-Batasan tersebut menjadi bagian dari ruang lingkup pengembangan bertahap QueueApp. Integrasi backend dan database akan dikerjakan pada minggu praktikum berikutnya.
+Batasan tersebut menjadi bagian dari ruang lingkup pengembangan bertahap QueueApp. Integrasi frontend dengan backend dan penggunaan database terpusat dapat dikembangkan pada tahap praktikum berikutnya.
