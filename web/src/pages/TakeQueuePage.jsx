@@ -19,7 +19,7 @@ export default function TakeQueuePage({
   return (
     <Layout
       judul="Ambil Nomor Antrean"
-      catatan="Minggu 08: pengunjung dapat mengambil nomor antrean dan melihat statusnya; data masih tersimpan di peramban ini."
+      catatan="Minggu 11: pengunjung dapat membuat antrean melalui REST API; ID antrean miliknya disimpan secara lokal untuk melihat status."
     >
       <DataState
         status={status}

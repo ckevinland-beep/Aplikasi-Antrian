@@ -1,5 +1,7 @@
 import express from 'express';
+import cors from 'cors';
 
+import { config } from './config/index.js';
 import { routes } from './routes/index.js';
 import { requestLogger } from './middleware/requestLogger.js';
 import { notFound } from './middleware/notFound.js';
@@ -10,6 +12,11 @@ export function createApp() {
 
   /* Membaca body JSON menjadi req.body. */
   app.use(express.json());
+
+  /* Mengizinkan origin web yang sudah dikonfigurasi. */
+  app.use(cors({
+    origin: config.webOrigins,
+  }));
 
   app.use(requestLogger);
 

@@ -1,266 +1,203 @@
-# QueueApp
+# QueueApp — Aplikasi Sistem Antrean
 
-QueueApp adalah aplikasi antrean sederhana yang dikembangkan secara bertahap dalam praktikum Web and Mobile Technology. Aplikasi ini membantu pengunjung mengambil dan memantau nomor antrean serta membantu petugas mengelola proses pemanggilan dan penyelesaian antrean.
-
-## Tujuan Proyek
-
-Proyek ini dikembangkan untuk menerapkan proses pengembangan aplikasi secara bertahap, mulai dari identifikasi kebutuhan, perancangan antarmuka, pembuatan fitur, hingga migrasi frontend menggunakan React, Vite, dan React Router serta pengembangan backend menggunakan Node.js dan Express.
+QueueApp merupakan aplikasi sistem antrean berbasis web yang dikembangkan secara bertahap menggunakan React, Node.js, Express, dan MySQL. Aplikasi ini dirancang untuk membantu pengunjung mengambil nomor antrean serta membantu petugas mengelola proses pelayanan.
 
 ## Fitur Utama
 
-- Menampilkan daftar antrean dan status antrean.
-- Mengambil nomor antrean baru.
-- Melihat posisi dan status antrean.
-- Memanggil antrean berikutnya melalui halaman petugas.
-- Menyelesaikan antrean yang sedang dipanggil.
-- Mencegah pemanggilan antrean berikutnya ketika masih ada antrean berstatus `CALLED`.
-- Menampilkan keadaan memuat, galat, dan data kosong pada antarmuka.
-- Menyimpan data antrean pada browser menggunakan `localStorage`.
-- Menyediakan halaman pengunjung dan petugas melalui React Router.
-- Menyediakan REST API backend untuk pemeriksaan kesehatan server dan pengambilan daftar antrean.
+- Menampilkan daftar dan status antrean.
+- Mengambil nomor antrean secara otomatis.
+- Menampilkan nomor antrean milik pengunjung.
+- Memanggil antrean berikutnya.
+- Menyelesaikan antrean yang sedang dilayani.
+- Mengelola data antrean melalui REST API.
+- Menyimpan data antrean secara terpusat pada database MySQL.
+- Menyimpan ID antrean milik pengunjung secara lokal menggunakan `localStorage`.
+- Menerapkan validasi request dan penanganan error pada backend.
+- Mengatur akses lintas origin menggunakan CORS.
 
-**Catatan:** Pada checkpoint Week 08, aplikasi masih berupa Web MVP berbasis frontend. Pada Week 09, backend REST API menggunakan Node.js dan Express mulai dikembangkan dengan data mock di memori server. Frontend masih menggunakan `localStorage` dan belum terintegrasi dengan REST API. Database MySQL juga belum digunakan oleh backend untuk menyimpan data antrean. Formulir login belum menggunakan autentikasi sungguhan.
+**Catatan:** Week 08 merupakan checkpoint Web MVP berbasis frontend. Pada Week 09, backend mulai dikembangkan menggunakan Node.js dan Express. Week 10 melanjutkan pengembangan dengan integrasi database MySQL. Pada Week 11, REST API diselesaikan dan frontend React dihubungkan dengan backend. Data antrean disimpan pada MySQL, sedangkan `localStorage` hanya digunakan untuk menyimpan ID antrean milik pengunjung. Formulir login petugas masih berupa simulasi dan belum menggunakan autentikasi sungguhan.
 
 ## Teknologi yang Digunakan
 
-- **HTML:** menyusun struktur dokumen aplikasi.
-- **CSS:** mengatur tampilan dan desain responsif.
-- **JavaScript:** menangani logika dan interaksi aplikasi.
-- **Node.js:** menjalankan lingkungan backend JavaScript.
-- **Express:** membangun REST API dan mengelola routing serta middleware backend.
-- **React:** membangun antarmuka berbasis komponen.
-- **Vite:** menyediakan development server dan proses build frontend.
-- **React Router:** mengelola navigasi antarhalaman.
-- **localStorage:** menyimpan data antrean secara lokal pada browser.
-- **Docker Compose:** menjalankan lingkungan pengembangan.
-- **MySQL:** layanan database yang disiapkan dalam lingkungan proyek.
-- **Git dan GitHub:** mengelola versi dan riwayat pengembangan proyek.
+### Frontend
+- React
+- Vite
+- JavaScript
+- HTML
+- CSS
+- React Router
+- localStorage
 
-## Perjalanan Pengembangan
+### Backend
+- Node.js
+- Express
+- MySQL2
+- CORS
 
-### Week 01 — Discovery & Environment
+### Database dan Lingkungan Pengembangan
+- MySQL
+- Docker
+- Docker Compose
+- Git dan GitHub
 
-Menyiapkan repository, kebutuhan awal proyek, konfigurasi environment, dan layanan Docker Compose. Pada tahap ini, layanan MySQL, server placeholder, dan web placeholder digunakan untuk menyiapkan lingkungan pengembangan.
+## Endpoint Backend
 
-Checkpoint: `week-01`
+Base URL API:
 
-### Week 02 — Requirements & Perancangan
+`http://localhost:3001/api`
 
-Memperjelas kebutuhan aplikasi, pengguna, ruang lingkup, dan rancangan sistem sebagai dasar pengembangan fitur pada minggu berikutnya.
+Daftar endpoint:
 
-Checkpoint: `week-02` — ketersediaan tag perlu diverifikasi pada repository.
+| Method | Endpoint | Fungsi |
+|---|---|---|
+| GET | `/api/health` | Memeriksa kondisi server. |
+| GET | `/api/queues` | Mengambil daftar antrean. |
+| POST | `/api/queues` | Membuat antrean baru. |
+| GET | `/api/queues/:id` | Mengambil detail antrean. |
+| PATCH | `/api/queues/:id` | Memperbarui status antrean. |
+| DELETE | `/api/queues/:id` | Menghapus antrean. |
+| POST | `/api/queues/next` | Memanggil antrean berikutnya. |
+| POST | `/api/queues/:id/complete` | Menyelesaikan antrean. |
 
-### Week 03 — UI/UX + HTML
+Filter daftar antrean dapat menggunakan query parameter:
 
-Membuat struktur dasar halaman aplikasi untuk menampilkan antrean, mengambil nomor antrean, login petugas, dan dashboard petugas. Tahap ini berfokus pada struktur halaman dan alur penggunaan.
+`GET /api/queues?status=WAITING`
 
-Checkpoint: `week-03`
+Status antrean yang didukung:
+- `WAITING`
+- `CALLED`
+- `COMPLETED`
 
-### Week 04 — CSS & Responsive Design
+Dokumentasi lengkap mengenai request, response, validasi, dan kode error tersedia pada `docs/api.md`.
 
-Menambahkan stylesheet untuk memperbaiki tampilan, formulir, tabel antrean, serta responsivitas halaman pada berbagai ukuran layar. Pendekatan yang digunakan adalah mobile-first dengan CSS biasa.
+**Catatan:** Backend menggunakan MySQL untuk menyimpan data antrean. Frontend berkomunikasi dengan backend melalui REST API. Login petugas masih berupa simulasi dan autentikasi JWT belum diterapkan.
 
-Checkpoint: `week-04`
+## Struktur Repository
 
-### Week 05 — JavaScript Foundation
-
-Menambahkan interaksi pada aplikasi, termasuk pengambilan nomor, pemanggilan antrean, penyelesaian antrean, dan penyimpanan data menggunakan `localStorage`.
-
-Checkpoint: `week-05`
-
-### Week 06 — React + Vite
-
-Memigrasikan frontend dari JavaScript biasa ke React menggunakan Vite. Logika antrean, penyimpanan, komponen, halaman, dan entry point ditata ke dalam folder `src`. Struktur aplikasi kemudian dikembangkan menggunakan komponen React.
-
-Checkpoint: `week-06`
-
-### Week 07 — React Integration & Routing
-
-Mengintegrasikan React Router agar pengguna dapat berpindah halaman melalui navigasi sisi klien. Aplikasi menggunakan satu dokumen HTML utama dengan empat path utama:
-
-- `/` — halaman utama.
-- `/queue` — halaman pengambilan dan pemantauan antrean.
-- `/admin/login` — halaman login petugas.
-- `/admin/dashboard` — dashboard petugas.
-
-Pengelolaan state antrean dipusatkan melalui `useQueue.js`. Lapisan `queueApi.js` menyediakan operasi data berbasis Promise, sedangkan `DataState.jsx` menangani keadaan memuat dan galat.
-
-Pada tahap ini, data antrean masih dikelola secara lokal dan belum terhubung dengan REST API sungguhan maupun database terpusat.
-
-Checkpoint: `week-07`
-
-### Week 08 — UTS / Web MVP
-
-Checkpoint Week 08 menjadi titik pemeriksaan Web MVP sebelum pengembangan dilanjutkan ke tahap berikutnya. Tag `week-08` digunakan sebagai penanda checkpoint UTS.
-
-Perbaikan utama pada tahap ini meliputi:
-
-- Memastikan satu tindakan pemanggilan hanya memanggil satu antrean.
-- Mencegah pemanggilan antrean baru ketika masih ada antrean berstatus `CALLED`.
-- Memisahkan tindakan antrean dari proses penyegaran daftar agar kegagalan penyegaran tidak membuat tindakan yang sudah berhasil dilaporkan sebagai gagal.
-- Menyesuaikan halaman dan navigasi dengan struktur React Router.
-- Memperbarui dokumentasi alur antarmuka, arsitektur, dan checkpoint UTS.
-
-Checkpoint `week-08` telah digunakan sebagai penanda checkpoint UTS dan menjadi dasar pengembangan pada Week 09.
-
-### Week 09 — Node.js + Express
-
-Mengembangkan backend QueueApp menggunakan Node.js dan Express sebagai dasar penyediaan REST API.
-
-Implementasi pada tahap ini meliputi:
-
-- Menyiapkan project Express pada folder `server`.
-- Memisahkan kode backend ke dalam lapisan routes, controllers, dan services.
-- Menambahkan middleware untuk mencatat request, memvalidasi query, dan menangani route yang tidak ditemukan.
-- Menyediakan format respons sukses melalui properti `data`.
-- Menyediakan penanganan galat terpusat dengan format `error` yang konsisten.
-- Menambahkan endpoint `GET /api/health` untuk memeriksa kondisi server.
-- Menambahkan endpoint `GET /api/queues` untuk mengambil daftar antrean dari data mock.
-- Mendukung filter antrean berdasarkan status `WAITING`, `CALLED`, dan `COMPLETED`.
-
-Pada tahap ini, backend belum menggunakan database. Data antrean masih disimpan sementara di memori server dan frontend belum terhubung ke API Express.
-
-Checkpoint: `week-09` — akan ditetapkan setelah pemeriksaan akhir dan proses Git selesai.
+```text
+queueapp/
+├── database/
+│   ├── schema.sql
+│   └── seed.sql
+├── docs/
+│   ├── api.md
+│   ├── architecture.md
+│   └── ui-flow.md
+├── server/
+│   ├── src/
+│   │   ├── config/
+│   │   ├── controllers/
+│   │   ├── middleware/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── app.js
+│   │   └── server.js
+│   ├── package.json
+│   └── package-lock.json
+├── web/
+│   ├── src/
+│   │   ├── api/
+│   │   ├── components/
+│   │   ├── hooks/
+│   │   ├── pages/
+│   │   ├── queue.js
+│   │   └── storage.js
+│   ├── dist/
+│   └── package.json
+├── .env.example
+├── .gitignore
+├── docker-compose.yml
+├── docker-compose.local.yml
+├── MILESTONE.md
+└── README.md
+```
 
 ## Menjalankan Proyek
 
-### Prasyarat
+### 1. Persiapan
 
 Pastikan perangkat telah memiliki:
+- Git
+- Docker
+- Docker Compose
 
-- Git.
-- Docker Desktop.
-- Docker Compose.
-
-Untuk menjalankan frontend secara langsung di luar Docker, gunakan Node.js dan npm yang sesuai dengan kebutuhan proyek.
-
-### Langkah Menjalankan
-
-Clone repository dan masuk ke direktori proyek:
+### 2. Clone Repository
 
 ```bash
 git clone https://github.com/ckevinland-beep/Aplikasi-Antrian.git
 cd Aplikasi-Antrian
 ```
 
-Salin `.env.example` menjadi `.env` apabila file tersebut digunakan oleh konfigurasi lokal. Pada Windows, file dapat disalin melalui File Explorer.
+### 3. Konfigurasi Environment
 
-Jalankan layanan menggunakan Docker Compose:
+Buat file `.env` berdasarkan `.env.example`, kemudian sesuaikan konfigurasi database dan origin frontend.
+
+Contoh konfigurasi origin frontend:
+
+```env
+WEB_ORIGIN=http://localhost:5173
+```
+
+Jangan mengunggah file `.env` yang berisi konfigurasi rahasia ke repository.
+
+### 4. Menjalankan Docker Compose
 
 ```bash
-docker compose up -d
+docker compose up -d --build
+```
+
+### 5. Memeriksa Container
+
+```bash
 docker compose ps
 ```
 
-Untuk melihat log layanan:
+### 6. Mengakses Aplikasi
 
-```bash
-docker compose logs -f
-```
+- Frontend: `http://localhost:5173`
+- Backend API: `http://localhost:3001/api`
+- Health Check: `http://localhost:3001/api/health`
 
-Untuk menghentikan layanan:
+## Aturan Status Antrean
 
-```bash
-docker compose down
-```
+QueueApp menggunakan tiga status antrean:
 
-Jangan memasukkan file `.env` ke repository karena dapat berisi konfigurasi lokal atau informasi sensitif.
+| Status | Keterangan |
+|---|---|
+| WAITING | Antrean sedang menunggu. |
+| CALLED | Antrean sedang dipanggil petugas. |
+| COMPLETED | Antrean telah selesai dilayani. |
 
-### Alamat Demo
+Perpindahan status yang diperbolehkan:
 
-Setelah layanan web berjalan, buka alamat berikut:
+`WAITING → CALLED → COMPLETED`
 
-- Halaman utama: http://localhost:5173/
-- Halaman antrean: http://localhost:5173/queue
-- Login petugas: http://localhost:5173/admin/login
-- Dashboard petugas: http://localhost:5173/admin/dashboard
-
-### Endpoint Backend
-
-- Health check: http://localhost:3001/api/health
-- Daftar antrean: http://localhost:3001/api/queues
-- Filter antrean: http://localhost:3001/api/queues?status=WAITING
-
-Status yang dapat digunakan untuk filter adalah `WAITING`, `CALLED`, dan `COMPLETED`.
-
-**Catatan:** Backend berjalan secara terpisah dari frontend. Data antrean backend masih berupa data mock di memori server dan belum terhubung dengan MySQL maupun frontend.
-
-Alamat di atas merupakan alamat lokal pengembangan. Keberhasilan akses bergantung pada layanan Docker atau development server yang sedang berjalan.
-
-## Struktur Repository
-
-Struktur utama proyek setelah pengembangan React, routing, dan backend Express mencakup:
-
-```text
-Aplikasi-Antrian/
-├── docs/
-│   ├── architecture.md
-│   ├── requirements.md
-│   ├── ui-flow.md
-│   └── uts-checkpoint.md
-├── server/
-│   ├── package.json
-│   ├── package-lock.json
-│   └── src/
-│       ├── config/
-│       │   └── index.js
-│       ├── controllers/
-│       │   ├── healthController.js
-│       │   └── queueController.js
-│       ├── middleware/
-│       │   ├── errorHandler.js
-│       │   ├── notFound.js
-│       │   ├── requestLogger.js
-│       │   └── validateQueueQuery.js
-│       ├── routes/
-│       │   ├── healthRoutes.js
-│       │   ├── index.js
-│       │   └── queueRoutes.js
-│       ├── services/
-│       │   └── queueService.js
-│       ├── apiError.js
-│       ├── app.js
-│       └── server.js
-├── web/
-│   ├── index.html
-│   ├── package.json
-│   ├── package-lock.json
-│   ├── vite.config.js
-│   └── src/
-│       ├── api/
-│       │   └── queueApi.js
-│       ├── components/
-│       ├── pages/
-│       ├── styles/
-│       ├── App.jsx
-│       ├── main.jsx
-│       ├── queue.js
-│       ├── storage.js
-│       └── useQueue.js
-├── .env.example
-├── .gitignore
-├── docker-compose.yml
-├── MILESTONE.md
-├── PRD.md
-└── README.md
-```
-
-Struktur tersebut merupakan gambaran file utama proyek. Isi folder dapat bertambah atau berubah sesuai implementasi dan modul praktikum.
-
-## Pengelolaan Versi
-
-Pengembangan dilakukan menggunakan Git dengan cabang kerja mingguan, pesan commit yang menjelaskan perubahan, dan Pull Request untuk menggabungkan pekerjaan ke `main`.
-
-Checkpoint yang telah digunakan pada tahapan pengembangan meliputi `week-01`, `week-03`, `week-04`, `week-05`, `week-06`, dan `week-07`. Ketersediaan tag `week-02` perlu diperiksa pada repository.
-
-Checkpoint `week-08` menjadi titik pemeriksaan Web MVP. Pengembangan backend dilanjutkan pada branch `week/09-express`. Tag `week-09` akan ditetapkan setelah perubahan, dokumentasi, dan pemeriksaan akhir selesai dilakukan.
+Perubahan status yang tidak mengikuti urutan tersebut akan ditolak oleh server.
 
 ## Status Pengembangan
 
-Pada Week 09, QueueApp telah memiliki backend REST API menggunakan Node.js dan Express. Backend menyediakan endpoint health check dan daftar antrean dengan dukungan filter berdasarkan status.
+Pada Week 11, QueueApp telah memiliki frontend React dan backend REST API yang terintegrasi.
 
-Struktur backend telah dipisahkan ke dalam lapisan routes, controllers, dan services. Middleware digunakan untuk mencatat request, memvalidasi query, serta menangani galat dengan format respons yang konsisten.
+Backend menggunakan Node.js dan Express dengan koneksi database MySQL melalui connection pool. Struktur backend dipisahkan menjadi routes, controllers, services, konfigurasi, dan middleware.
 
-Data antrean pada backend masih menggunakan data mock di memori server dan belum terhubung dengan database MySQL. Frontend masih mengelola data antrean menggunakan `localStorage` dan belum terintegrasi dengan backend Express.
+REST API menyediakan delapan endpoint untuk health check serta operasi membaca, membuat, memperbarui, memanggil, menyelesaikan, dan menghapus antrean.
 
-Pengembangan berikutnya akan mengikuti modul praktikum, dengan menjaga konsistensi implementasi, dokumentasi, dan pengelolaan versi proyek.
+Validasi request, penanganan error terpusat, serta konfigurasi CORS telah diterapkan. Frontend menggunakan REST API untuk mengambil dan mengelola data antrean.
+
+Database MySQL menjadi penyimpanan utama data antrean. `localStorage` hanya menyimpan ID antrean milik pengunjung agar pengunjung dapat menemukan antreannya kembali.
+
+Autentikasi dan otorisasi petugas secara sungguhan, termasuk JWT, belum diterapkan dan masih menjadi batasan sistem.
+
+Dokumentasi kontrak API tersedia pada `docs/api.md`, sedangkan penjelasan arsitektur tersedia pada `docs/architecture.md`.
+
+## Dokumentasi
+
+- `README.md`: Informasi umum dan panduan menjalankan proyek.
+- `MILESTONE.md`: Catatan perkembangan dan pencapaian setiap minggu.
+- `docs/api.md`: Dokumentasi kontrak REST API.
+- `docs/architecture.md`: Dokumentasi arsitektur aplikasi.
+- `docs/ui-flow.md`: Dokumentasi alur antarmuka pengguna.
+
+## Repository
+
+GitHub: https://github.com/ckevinland-beep/Aplikasi-Antrian

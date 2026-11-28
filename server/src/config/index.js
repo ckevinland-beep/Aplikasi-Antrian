@@ -31,4 +31,12 @@ export const config = Object.freeze({
         user: wajib('DB_USER'),
         password: wajib('DB_PASSWORD'),
     }),
+
+    // Daftar origin web yang diizinkan mengakses API.
+    webOrigins: Object.freeze(
+        (process.env.WEB_ORIGIN || 'http://localhost:5173')
+            .split(',')
+            .map((asal) => asal.trim())
+            .filter(Boolean)
+    ),
 });

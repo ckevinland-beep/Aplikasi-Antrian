@@ -13,7 +13,7 @@ export default function AdminLoginPage() {
   return (
     <Layout
       judul="Masuk sebagai Petugas"
-      catatan="Minggu 08: form ini memeriksa kelengkapan isian, tetapi belum memeriksa kredensial sama sekali. Autentikasi sungguhan ditambahkan pada Minggu 13."
+      catatan="Minggu 11: halaman masuk petugas masih memvalidasi form dan melakukan navigasi; autentikasi kredensial dan JWT belum diterapkan."
     >
       <AdminLogin onLogin={handleLogin} />
     </Layout>

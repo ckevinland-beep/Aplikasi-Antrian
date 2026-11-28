@@ -1,33 +1,13 @@
 /* =============================================================================
    queueApi.js — satu-satunya pintu ke data antrean
 
-   Mulai Minggu 07, komponen tidak mengubah data antrean sendiri.
-   Semua operasi melewati berkas ini dan mengembalikan Promise.
-
-   Saat ini data masih disimpan di localStorage melalui storage.js.
-   Belum ada API server sungguhan. Pada minggu berikutnya, lapisan ini
-   dapat diganti dengan fetch() tanpa mengubah seluruh komponen React.
+   Seluruh operasi antrean sekarang dikirim ke REST API.
    ============================================================================= */
 
-import {
-  takeQueue,
-  callNext,
-  completeQueue,
-} from '../queue.js';
+const API_URL =
+  import.meta.env.VITE_API_URL ?? 'http://localhost:3001/api';
 
-import {
-  muatAntrean,
-  simpanAntrean,
-} from '../storage.js';
-
-/* Jeda buatan agar keadaan memuat bisa diuji. */
-const JEDA_MS = 250;
-
-/* Ubah menjadi true sementara untuk menguji tampilan galat.
-   Kembalikan ke false setelah pengujian selesai. */
-const SIMULASI_GAGAL = false;
-
-/* Bentuk galat yang konsisten dengan respons API nantinya. */
+/* Bentuk galat yang konsisten untuk seluruh operasi API. */
 export class GalatApi extends Error {
   constructor(code, message) {
     super(message);
@@ -36,66 +16,53 @@ export class GalatApi extends Error {
   }
 }
 
-/* Memberi jeda seperti permintaan ke server. */
-function tunggu() {
-  return new Promise((selesai) => {
-    setTimeout(selesai, JEDA_MS);
-  });
-}
+/* Mengirim permintaan ke server dan membaca respons API. */
+async function permintaan(alamat, opsi = {}) {
+  let response;
 
-/* Kerangka bersama untuk semua operasi data. */
-async function permintaan(kerjakan) {
-  await tunggu();
-
-  if (SIMULASI_GAGAL) {
+  try {
+    response = await fetch(API_URL + alamat, {
+      headers: { 'Content-Type': 'application/json' },
+      ...opsi,
+    });
+  } catch {
     throw new GalatApi(
       'NETWORK_ERROR',
-      'Tidak dapat menghubungi server antrean.',
+      'Tidak dapat menghubungi server antrean. Periksa koneksi Anda, lalu coba lagi.',
     );
   }
 
-  return kerjakan();
-}
+  const isi =
+    response.status === 204
+      ? null
+      : await response.json().catch(() => null);
 
-/* Menerapkan aturan antrean, memeriksa galat, lalu menyimpan hasilnya. */
-function terapkan(aksi) {
-  const hasil = aksi(muatAntrean());
-
-  if (!hasil.ok) {
-    throw new GalatApi(hasil.code, hasil.message);
+  if (!response.ok) {
+    throw new GalatApi(
+      isi?.error?.code ?? 'UNKNOWN_ERROR',
+      isi?.error?.message ?? `Permintaan gagal (${response.status}).`,
+    );
   }
 
-  simpanAntrean(hasil.state);
-
-  return hasil.queue;
+  return isi?.data;
 }
 
-/* GET /api/queues
-   Mengambil seluruh daftar antrean. */
+/* GET /api/queues — mengambil seluruh daftar antrean. */
 export function ambilDaftarAntrean() {
-  return permintaan(() => muatAntrean().queues);
+  return permintaan('/queues');
 }
 
-/* POST /api/queues
-   Membuat nomor antrean baru. */
+/* POST /api/queues — membuat nomor antrean baru. */
 export function buatAntrean() {
-  return permintaan(() =>
-    terapkan((data) => takeQueue(data)),
-  );
+  return permintaan('/queues', { method: 'POST' });
 }
 
-/* POST /api/queues/next
-   Memanggil antrean menunggu berikutnya. */
+/* POST /api/queues/next — memanggil antrean berikutnya. */
 export function panggilAntreanBerikutnya() {
-  return permintaan(() =>
-    terapkan((data) => callNext(data)),
-  );
+  return permintaan('/queues/next', { method: 'POST' });
 }
 
-/* POST /api/queues/:id/complete
-   Menandai antrean tertentu sebagai selesai. */
+/* POST /api/queues/:id/complete — menyelesaikan antrean. */
 export function selesaikanAntrean(id) {
-  return permintaan(() =>
-    terapkan((data) => completeQueue(data, id)),
-  );
+  return permintaan(`/queues/${id}/complete`, { method: 'POST' });
 }

@@ -1,47 +1,10 @@
-import { STATUS, emptyState } from './queue.js';
+/* =============================================================================
+   storage.js — penyimpanan lokal untuk ID antrean milik pengunjung
+   ============================================================================= */
 
-export const KUNCI_ANTREAN = 'queueapp.antrean.v2';
 export const KUNCI_NOMOR_SAYA = 'queueapp.nomor-saya.v2';
 
-function bentuknyaBenar(data) {
-  return (
-    data !== null &&
-    typeof data === 'object' &&
-    Number.isInteger(data.lastNumber) &&
-    Array.isArray(data.queues) &&
-    data.queues.every(
-      (queue) =>
-        Number.isInteger(queue.id) &&
-        typeof queue.queueNumber === 'string' &&
-        Object.hasOwn(STATUS, queue.status),
-    )
-  );
-}
-
-export function muatAntrean() {
-  try {
-    const teks = localStorage.getItem(KUNCI_ANTREAN);
-
-    if (!teks) return emptyState();
-
-    const data = JSON.parse(teks);
-
-    if (!bentuknyaBenar(data)) return emptyState();
-
-    return data;
-  } catch {
-    return emptyState();
-  }
-}
-
-export function simpanAntrean(data) {
-  try {
-    localStorage.setItem(KUNCI_ANTREAN, JSON.stringify(data));
-  } catch {
-    // Penyimpanan mungkin tidak tersedia di peramban.
-  }
-}
-
+/* Mengambil ID antrean milik pengunjung dari localStorage. */
 export function muatNomorSaya() {
   try {
     const teks = localStorage.getItem(KUNCI_NOMOR_SAYA);
@@ -56,6 +19,7 @@ export function muatNomorSaya() {
   }
 }
 
+/* Menyimpan ID antrean milik pengunjung ke localStorage. */
 export function simpanNomorSaya(id) {
   try {
     localStorage.setItem(KUNCI_NOMOR_SAYA, JSON.stringify(id));

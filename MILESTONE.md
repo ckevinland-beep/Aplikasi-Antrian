@@ -1,6 +1,6 @@
 # QueueApp Milestone Tracker
 
-Dokumen ini mencatat perkembangan QueueApp berdasarkan modul praktikum Minggu 01 sampai Minggu 09. Status setiap milestone disesuaikan dengan pekerjaan yang telah dilakukan dan hasil verifikasi yang tersedia.
+Dokumen ini mencatat perkembangan QueueApp berdasarkan tahapan praktikum Minggu 01 sampai Minggu 11. Status setiap milestone disesuaikan dengan implementasi, pengujian, dan hasil verifikasi yang telah dilakukan.
 
 ## Week 01 — Discovery & Environment
 
@@ -44,7 +44,7 @@ Periksa `docs/requirements.md`, `PRD.md`, serta berkas perancangan yang diwajibk
 
 ### Hasil
 
-Bagian ini perlu diperbarui berdasarkan berkas dan checkpoint Week 02 yang benar-benar tersedia di repository.
+Bagian ini masih memerlukan pemeriksaan terhadap berkas dan checkpoint Week 02 yang tersedia di repository.
 
 ## Week 03 — UI/UX + HTML
 
@@ -240,13 +240,12 @@ QueueApp menggunakan React Router untuk mengelola perpindahan halaman melalui sa
 
 ### Hasil
 
-Pengujian demo Week 08 telah diselesaikan. Implementasi Web MVP dan dokumentasi telah diperbarui. Tag `week-08` telah dibuat dan di-push sebagai penanda checkpoint UTS. Build produksi setelah seluruh perubahan Week 08 masih perlu diperiksa kembali.
+Pengujian demo Week 08 telah diselesaikan. Implementasi Web MVP dan dokumentasi telah diperbarui. Tag `week-08` telah dibuat dan di-push sebagai penanda checkpoint UTS.
 
 ## Week 09 — Node.js + Express
 
 ### Status Implementasi
 
-- [x] Branch `week/09-express` dibuat berdasarkan `main`.
 - [x] Project backend Node.js disiapkan pada folder `server`.
 - [x] Express ditambahkan sebagai dependency backend.
 - [x] Konfigurasi server disiapkan melalui `server/src/config/index.js`.
@@ -284,70 +283,131 @@ Pengujian demo Week 08 telah diselesaikan. Implementasi Web MVP dan dokumentasi 
 - `server/src/services/queueService.js`
 - `docker-compose.yml`
 
-### Verifikasi Pengujian
+### Hasil
 
-- [x] Konfigurasi Docker Compose berhasil diperiksa.
-- [x] Container MySQL, server, dan web berjalan.
-- [x] Endpoint `GET /api/health` memberikan respons berhasil.
-- [x] Endpoint `GET /api/queues` memberikan lima data antrean mock.
-- [x] Filter `WAITING` mengembalikan antrean A004 dan A005.
-- [x] Filter `CALLED` mengembalikan antrean A003.
-- [x] Status yang tidak dikenal menghasilkan respons HTTP 400.
-- [x] Format respons galat menggunakan properti `error` dengan `code` dan `message`.
-- [x] Route yang tidak tersedia menghasilkan respons HTTP 404.
-- [x] Frontend tetap dapat diakses melalui `http://localhost:5173/`.
-- [x] Log server menampilkan request dan status respons.
+Backend QueueApp berhasil dikembangkan menggunakan Node.js dan Express. Server menyediakan endpoint health check dan daftar antrean dengan dukungan filter status. Middleware dan error handler diterapkan untuk menjaga konsistensi penanganan request dan respons API.
 
-### Fokus Pemeriksaan
+Pada tahap ini, data antrean backend masih menggunakan data mock di memori server dan frontend masih menggunakan penyimpanan lokal. Tahap berikutnya melanjutkan pengembangan dengan integrasi database MySQL.
 
-- Pemisahan tanggung jawab antara routes, controllers, dan services.
-- Validasi query `status` sebelum proses pengambilan data.
-- Konsistensi format respons sukses dan galat.
-- Penanganan route yang tidak tersedia.
-- Penggunaan data mock tanpa ketergantungan pada database.
-- Pemisahan backend Express dari frontend React yang masih menggunakan `localStorage`.
+Implementasi Week 09 telah diselesaikan dan digabungkan ke jalur pengembangan utama sebelum pengerjaan Week 10.
 
-### Verifikasi Dokumentasi dan Git
+## Week 10 — MySQL Database Integration
 
-- [x] README diperbarui untuk menjelaskan backend Week 09.
-- [x] `MILESTONE.md` diperbarui dan diperiksa.
-- [x] `docs/architecture.md` diperbarui untuk menjelaskan arsitektur Week 09.
-- [ ] Seluruh perubahan diperiksa melalui `git status`.
-- [ ] Perubahan Week 09 disimpan dalam commit.
-- [ ] Pull Request Week 09 dibuat dan diperiksa.
-- [ ] Perubahan digabungkan ke `main`.
-- [ ] Tag `week-09` dibuat dan di-push setelah penggabungan.
+### Status Implementasi
+
+- [x] Integrasi database MySQL dikembangkan pada backend QueueApp.
+- [x] Struktur database antrean disiapkan.
+- [x] Backend dikembangkan agar menggunakan database MySQL untuk penyimpanan data antrean.
+- [x] Implementasi Week 10 diselesaikan.
+- [x] Perubahan Week 10 digabungkan melalui Pull Request #9.
+- [x] Tag `week-10` dibuat sebagai penanda checkpoint.
 
 ### Hasil
 
-Backend QueueApp telah berhasil dikembangkan menggunakan Node.js dan Express. Server menyediakan endpoint health check dan daftar antrean dengan dukungan filter status. Middleware dan error handler telah diterapkan untuk menjaga konsistensi penanganan request dan respons API.
+Week 10 melanjutkan backend Express dari Week 09 dengan integrasi database MySQL. Penyimpanan data antrean dikembangkan dari data mock di memori server menjadi penyimpanan database terpusat.
 
-Data antrean backend masih menggunakan data mock di memori server dan belum terhubung dengan MySQL. Frontend masih menggunakan `localStorage` dan belum terintegrasi dengan REST API Express.
+Perubahan Week 10 telah digabungkan melalui Pull Request #9 dan tag `week-10` telah dibuat.
 
-Implementasi dan pengujian utama Week 09 telah dilakukan. Dokumentasi README, milestone, dan arsitektur telah diperbarui. Pemeriksaan akhir Git, commit, Pull Request, penggabungan ke main, dan pembuatan tag masih perlu diselesaikan sebelum checkpoint Week 09 dinyatakan selesai.
+## Week 11 — REST API
 
-## Ringkasan Week 01–09
+### Status Implementasi Backend
+
+- [x] Koneksi database dikembangkan menggunakan MySQL connection pool.
+- [x] Middleware validasi antrean dibuat melalui `validateQueue.js`.
+- [x] Validasi ID antrean diterapkan.
+- [x] Validasi query status diterapkan.
+- [x] Validasi request body untuk perubahan status diterapkan.
+- [x] Aturan perpindahan status antrean diterapkan pada service.
+- [x] Controller antrean dihubungkan dengan service database.
+- [x] Endpoint GET daftar antrean diterapkan.
+- [x] Endpoint POST pembuatan antrean diterapkan.
+- [x] Endpoint GET detail antrean diterapkan.
+- [x] Endpoint PATCH perubahan status diterapkan.
+- [x] Endpoint DELETE penghapusan antrean diterapkan.
+- [x] Endpoint POST pemanggilan antrean berikutnya diterapkan.
+- [x] Endpoint POST penyelesaian antrean diterapkan.
+- [x] Endpoint GET health check tetap tersedia.
+- [x] Format respons sukses dan error diseragamkan.
+- [x] Konfigurasi CORS diterapkan menggunakan variabel `WEB_ORIGIN`.
+
+### Status Implementasi Frontend
+
+- [x] `queueApi.js` dihubungkan dengan REST API backend.
+- [x] Operasi pengambilan daftar antrean menggunakan API.
+- [x] Operasi pembuatan antrean menggunakan API.
+- [x] Operasi pemanggilan antrean berikutnya menggunakan API.
+- [x] Operasi penyelesaian antrean menggunakan API.
+- [x] Penyimpanan daftar antrean lokal di browser tidak lagi digunakan sebagai sumber data utama.
+- [x] `localStorage` digunakan untuk menyimpan ID antrean milik pengunjung.
+- [x] `queue.js` disesuaikan menjadi kumpulan helper untuk membaca dan mengolah data antrean.
+- [x] Catatan footer lima halaman diperbarui menjadi Minggu 11.
+
+### Dokumentasi
+
+- [x] `docs/api.md` dibuat dan disimpan.
+- [x] README diperbarui untuk menjelaskan implementasi Week 11.
+- [x] `docs/architecture.md` diperbarui sesuai arsitektur Week 11.
+- [x] `MILESTONE.md` diperiksa kembali setelah seluruh pekerjaan dokumentasi selesai.
+
+### Verifikasi Pengujian
+
+- [x] Konfigurasi Docker Compose berhasil diperiksa menggunakan `docker compose config --quiet`.
+- [x] Konfigurasi `WEB_ORIGIN` berhasil dibaca oleh backend.
+- [x] Endpoint health check berhasil diakses.
+- [x] Endpoint daftar antrean berhasil mengembalikan data dari backend.
+- [x] Respons CORS untuk origin `http://localhost:5173` berhasil diperiksa.
+- [x] Pemeriksaan sintaks seluruh file JavaScript pada `server/src` berhasil.
+- [x] Pemeriksaan sintaks `web/src/api/queueApi.js` berhasil.
+- [x] Build frontend berhasil dijalankan menggunakan `npm run build`.
+- [x] `git diff --check` tidak menemukan kesalahan whitespace.
+- [x] Endpoint diperiksa melalui skenario sukses dan gagal yang relevan, termasuk health check, daftar, pembuatan, detail, perubahan status, penyelesaian, penghapusan, dan penolakan pemanggilan berikutnya ketika masih ada antrean `CALLED`.
+- [x] Halaman utama, pengambilan antrean, login petugas, dan dashboard diperiksa melalui browser.
+
+### Batasan Implementasi
+
+- Autentikasi petugas belum diterapkan.
+- JWT belum diterapkan.
+- Formulir login masih berupa simulasi validasi dan navigasi.
+- Frontend menggunakan REST API untuk operasi antrean yang tersedia pada antarmuka saat ini.
+- Endpoint detail, PATCH, dan DELETE tersedia pada backend meskipun belum menjadi operasi utama yang digunakan antarmuka frontend.
+- Jalur sukses endpoint pemanggilan antrean berikutnya belum diuji secara terpisah untuk menghindari perubahan data antrean lain selama pengujian.
+
+### Hasil
+
+Pada Week 11, QueueApp telah dikembangkan menjadi aplikasi dengan frontend React yang terhubung ke backend REST API menggunakan database MySQL.
+
+Backend menyediakan delapan endpoint yang mencakup health check dan pengelolaan antrean. Koneksi database menggunakan MySQL connection pool, validasi request diterapkan melalui middleware, dan aturan perubahan status dikelola pada service.
+
+Konfigurasi CORS membatasi origin frontend melalui variabel lingkungan `WEB_ORIGIN`. Frontend menggunakan REST API untuk membaca, membuat, memanggil, dan menyelesaikan antrean. `localStorage` hanya digunakan untuk menyimpan ID antrean milik pengunjung, bukan sebagai penyimpanan utama daftar antrean.
+
+Dokumentasi kontrak API, README, dokumentasi arsitektur, dan milestone telah diperbarui. Pengujian API dan pemeriksaan halaman frontend telah dilakukan. Jalur sukses endpoint pemanggilan antrean berikutnya belum diuji secara terpisah untuk menghindari perubahan data antrean lain selama pengujian.
+
+## Ringkasan Week 01–11
 
 | Minggu | Materi | Status |
 |---|---|---|
-| Week 01 | Discovery & Environment | Selesai pada tahap awal |
+| Week 01 | Discovery & Environment | Selesai |
 | Week 02 | Requirements & Perancangan | Perlu verifikasi |
-| Week 03 | UI/UX + HTML | Selesai pada tahap awal |
-| Week 04 | CSS & Responsive Design | Selesai pada tahap awal |
-| Week 05 | JavaScript Foundation | Selesai pada tahap awal |
-| Week 06 | React + Vite | Implementasi selesai; build dan pengujian pernah dilakukan |
+| Week 03 | UI/UX + HTML | Selesai |
+| Week 04 | CSS & Responsive Design | Selesai |
+| Week 05 | JavaScript Foundation | Selesai |
+| Week 06 | React + Vite | Implementasi dan pengujian selesai |
 | Week 07 | React Integration & Routing | Implementasi dan pengujian demo selesai |
-| Week 08 | UTS / Web MVP | Implementasi dan pengujian demo selesai; tag berhasil di-push |
-| Week 09 | Node.js + Express | Implementasi dan pengujian backend selesai; dokumentasi dan Git akhir masih berlangsung |
+| Week 08 | UTS / Web MVP | Implementasi dan pengujian selesai; tag berhasil di-push |
+| Week 09 | Node.js + Express | Implementasi selesai dan digabungkan |
+| Week 10 | MySQL Database Integration | Selesai; PR #9 digabungkan dan tag `week-10` dibuat |
+| Week 11 | REST API | Implementasi, dokumentasi, dan pengujian utama selesai |
 
 ## Catatan
 
 Checklist implementasi, pengujian, dan verifikasi Git dibedakan agar dokumentasi tidak menyatakan checkpoint selesai sebelum seluruh pemeriksaan akhir dilakukan.
 
-Week 02 dan keberadaan tag `week-02` masih perlu diperiksa pada repository. Build produksi setelah perubahan Week 08 juga perlu dijalankan kembali.
+Week 02 dan keberadaan tag `week-02` masih perlu diperiksa pada repository.
 
 Pada Week 08, QueueApp masih merupakan Web MVP berbasis frontend. Data antrean belum terhubung dengan API backend maupun database terpusat. Formulir login petugas belum menerapkan autentikasi sungguhan.
 
-Pada Week 09, backend Express telah tersedia secara terpisah dari frontend. Data antrean backend masih berupa data mock di memori server dan belum menggunakan MySQL. Integrasi frontend dengan backend belum termasuk implementasi tahap ini.
+Pada Week 09, backend Express dikembangkan dengan data mock di memori server. Pada Week 10, penyimpanan antrean dilanjutkan menggunakan database MySQL.
 
-Tag `week-09` akan dibuat setelah dokumentasi, pemeriksaan akhir, Pull Request, dan penggabungan perubahan ke `main` selesai dilakukan.
+Pada Week 11, frontend dan backend telah dihubungkan melalui REST API. Data antrean disimpan pada MySQL, sedangkan ID antrean pengunjung disimpan secara lokal menggunakan `localStorage`.
+
+Autentikasi petugas dan JWT belum diterapkan. Jalur sukses pemanggilan antrean berikutnya belum diuji secara terpisah. Pemeriksaan akhir Git, commit, push, dan Pull Request Week 11 masih perlu diselesaikan.

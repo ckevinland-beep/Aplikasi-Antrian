@@ -19,7 +19,7 @@ export default function AdminDashboardPage({
     <Layout
       judul="Dashboard Petugas"
       petugas
-      catatan="Minggu 08: checkpoint Web MVP. Seluruh alur antrean berjalan, tetapi datanya masih hidup di peramban ini — belum ada API maupun database."
+      catatan="Minggu 11: petugas melihat dan mengelola antrean melalui REST API; perubahan status disimpan di database MySQL."
     >
       <DataState
         status={status}

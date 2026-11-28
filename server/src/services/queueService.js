@@ -1,4 +1,4 @@
-import { getConnection } from '../config/database.js';
+import { getPool } from '../config/database.js';
 
 /* Status yang sah, sesuai FR-03. */
 export const STATUS = Object.freeze({
@@ -8,6 +8,24 @@ export const STATUS = Object.freeze({
 });
 
 export const DAFTAR_STATUS = Object.freeze(Object.values(STATUS));
+
+/* Aturan perpindahan status yang diperbolehkan. */
+const TRANSISI_SAH = Object.freeze({
+  [STATUS.WAITING]: [STATUS.CALLED],
+  [STATUS.CALLED]: [STATUS.COMPLETED],
+  [STATUS.COMPLETED]: [],
+});
+
+const boleh = (dari, ke) => TRANSISI_SAH[dari]?.includes(ke) ?? false;
+
+/* Format hasil service. */
+function berhasil(queue) {
+  return { ok: true, queue };
+}
+
+function ditolak(code, message) {
+  return { ok: false, code, message };
+}
 
 /* Kolom yang dikirim ke klien. */
 const KOLOM = `
@@ -29,7 +47,7 @@ export function formatQueueNumber(angka) {
 
 /* READ: membaca seluruh antrean. */
 export async function listQueues({ status } = {}) {
-  const db = getConnection();
+  const db = getPool();
 
   if (status) {
     const [baris] = await db.execute(
@@ -49,7 +67,7 @@ export async function listQueues({ status } = {}) {
 
 /* READ: mencari satu antrean berdasarkan ID. */
 export async function findQueue(id) {
-  const db = getConnection();
+  const db = getPool();
 
   const [baris] = await db.execute(
     `SELECT ${KOLOM} FROM queues WHERE id = ?`,
@@ -61,7 +79,7 @@ export async function findQueue(id) {
 
 /* CREATE: membuat antrean baru. */
 export async function createQueue() {
-  const db = getConnection();
+  const db = getPool();
 
   const [hasil] = await db.execute(
     'INSERT INTO queues (status) VALUES (?)',
@@ -75,10 +93,12 @@ export async function createQueue() {
     [nomor, hasil.insertId]
   );
 
-  return findQueue(hasil.insertId);
+  const queue = await findQueue(hasil.insertId);
+
+  return berhasil(queue);
 }
 
-/* UPDATE: mengubah status antrean. */
+/* UPDATE: mengubah status antrean dengan memeriksa transisi. */
 const KOLOM_WAKTU = Object.freeze({
   [STATUS.CALLED]: 'called_at',
   [STATUS.COMPLETED]: 'completed_at',
@@ -86,25 +106,76 @@ const KOLOM_WAKTU = Object.freeze({
 });
 
 export async function updateQueueStatus(id, status) {
-  const db = getConnection();
+  const db = getPool();
+
+  const target = await findQueue(id);
+
+  if (!target) {
+    return ditolak(
+      'QUEUE_NOT_FOUND',
+      'Antrean tidak ditemukan.'
+    );
+  }
+
+  if (!boleh(target.status, status)) {
+    return ditolak(
+      'INVALID_TRANSITION',
+      `Antrean berstatus ${target.status} tidak dapat diubah menjadi ${status}.`
+    );
+  }
+
   const kolomWaktu = KOLOM_WAKTU[status];
 
   const sql = kolomWaktu
     ? `UPDATE queues SET status = ?, ${kolomWaktu} = NOW() WHERE id = ?`
     : 'UPDATE queues SET status = ? WHERE id = ?';
 
-  const [hasil] = await db.execute(sql, [status, id]);
+  await db.execute(sql, [status, id]);
 
-  if (hasil.affectedRows === 0) {
-    return null;
+  const queue = await findQueue(id);
+
+  return berhasil(queue);
+}
+
+/* Memanggil antrean WAITING paling lama. */
+export async function callNext() {
+  const db = getPool();
+
+  const [sedangDipanggil] = await db.execute(
+    `SELECT ${KOLOM} FROM queues WHERE status = ? LIMIT 1`,
+    [STATUS.CALLED]
+  );
+
+  if (sedangDipanggil.length > 0) {
+    return ditolak(
+      'QUEUE_ALREADY_CALLED',
+      `Antrean ${sedangDipanggil[0].queueNumber} masih dipanggil. Selesaikan lebih dulu.`
+    );
   }
 
-  return findQueue(id);
+  const [berikutnya] = await db.execute(
+    `SELECT ${KOLOM} FROM queues WHERE status = ? ORDER BY created_at ASC LIMIT 1`,
+    [STATUS.WAITING]
+  );
+
+  if (berikutnya.length === 0) {
+    return ditolak(
+      'NO_WAITING_QUEUE',
+      'Tidak ada antrean yang menunggu.'
+    );
+  }
+
+  return updateQueueStatus(berikutnya[0].id, STATUS.CALLED);
+}
+
+/* Menyelesaikan antrean: hanya CALLED → COMPLETED. */
+export async function completeQueue(id) {
+  return updateQueueStatus(id, STATUS.COMPLETED);
 }
 
 /* DELETE: menghapus antrean berdasarkan ID. */
 export async function deleteQueue(id) {
-  const db = getConnection();
+  const db = getPool();
 
   const [hasil] = await db.execute(
     'DELETE FROM queues WHERE id = ?',
