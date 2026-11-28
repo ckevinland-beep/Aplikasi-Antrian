@@ -16,7 +16,7 @@ export default function HomePage({
   return (
     <Layout
   judul="Antrean Saat Ini"
-  catatan="Minggu 08: checkpoint Web MVP. Seluruh alur antrean berjalan, tetapi datanya masih hidup di peramban ini — belum ada API maupun database."
+  catatan="Minggu 11: halaman ini menampilkan status antrean yang dibaca dari REST API dan database MySQL."
     >
       <DataState
         status={status}

@@ -1,33 +1,43 @@
 import mysql from 'mysql2/promise';
 import { config } from './index.js';
 
-let koneksi = null;
+// Maksimal koneksi database yang boleh digunakan bersamaan.
+const BATAS_KONEKSI = 10;
+
+let pool = null;
 
 export async function connectDatabase() {
-    koneksi = await mysql.createConnection({
-        ...config.database,
+  pool = mysql.createPool({
+    ...config.database,
 
-        // Gunakan UTC agar waktu konsisten.
-        timezone: 'Z',
-    });
+    // Gunakan UTC agar waktu konsisten.
+    timezone: 'Z',
 
-    // Pastikan koneksi benar-benar aktif.
-    await koneksi.ping();
+    // Pengaturan connection pool.
+    connectionLimit: BATAS_KONEKSI,
+    waitForConnections: true,
+    queueLimit: 0,
+  });
 
-    const { host, port, database } = config.database;
-    console.log(
-        `[queueapp] terhubung ke MySQL ${host}:${port}/${database}`
-    );
+  // Pastikan koneksi database benar-benar aktif.
+  const koneksi = await pool.getConnection();
+  await koneksi.ping();
+  koneksi.release();
 
-    return koneksi;
+  const { host, port, database } = config.database;
+
+  console.log(
+    `[queueapp] terhubung ke MySQL ${host}:${port}/${database} ` +
+    `(pool, maksimum ${BATAS_KONEKSI} koneksi)`
+  );
 }
 
-export function getConnection() {
-    if (!koneksi) {
-        throw new Error(
-            'Database belum tersambung - connectDatabase() harus dipanggil lebih dulu.'
-        );
-    }
+export function getPool() {
+  if (!pool) {
+    throw new Error(
+      'Database belum tersambung - connectDatabase() harus dipanggil lebih dulu.'
+    );
+  }
 
-    return koneksi;
+  return pool;
 }
